@@ -6,10 +6,10 @@ Steering gives Kiro persistent knowledge about your workspace through markdown f
 
 ## Steering File Scope
 
-| Level | Path | Applies to |
-| ----- | ---- | ---------- |
-| Workspace | `.kiro/steering/` | Current project only |
-| Global | `~/.kiro/steering/` | All workspaces |
+| Level     | Path                | Applies to           |
+| --------- | ------------------- | -------------------- |
+| Workspace | `.kiro/steering/`   | Current project only |
+| Global    | `~/.kiro/steering/` | All workspaces       |
 
 Workspace steering takes precedence over global steering when there are conflicting instructions.
 
@@ -23,10 +23,10 @@ Kiro can auto-generate three foundational files that establish core project cont
 
 Kiro creates:
 
-| File | Purpose |
-| ---- | ------- |
-| `product.md` | Product purpose, target users, key features, business objectives |
-| `tech.md` | Frameworks, libraries, development tools, technical constraints |
+| File           | Purpose                                                              |
+| -------------- | -------------------------------------------------------------------- |
+| `product.md`   | Product purpose, target users, key features, business objectives     |
+| `tech.md`      | Frameworks, libraries, development tools, technical constraints      |
 | `structure.md` | File organization, naming conventions, import patterns, architecture |
 
 These are included in every interaction by default.
@@ -92,19 +92,19 @@ This file is only included when you're working on `.tf` or `.tfvars` files.
 
 Control when each steering file is loaded using YAML front matter:
 
-| Mode | Front matter | Behavior |
-| ---- | ------------ | -------- |
-| Always (default) | `inclusion: always` | Loaded in every interaction |
-| File match | `inclusion: fileMatch` | Loaded only when working with matching files |
-| Manual | `inclusion: manual` | Available on-demand via `#filename` in chat |
-| Auto | `inclusion: auto` | Loaded when your request matches the description |
+| Mode             | Front matter           | Behavior                                         |
+| ---------------- | ---------------------- | ------------------------------------------------ |
+| Always (default) | `inclusion: always`    | Loaded in every interaction                      |
+| File match       | `inclusion: fileMatch` | Loaded only when working with matching files     |
+| Manual           | `inclusion: manual`    | Available on-demand via `#filename` in chat      |
+| Auto             | `inclusion: auto`      | Loaded when your request matches the description |
 
 ### File match patterns
 
 ```yaml
 ---
 inclusion: fileMatch
-fileMatchPattern: "components/**/*.tsx"
+fileMatchPattern: 'components/**/*.tsx'
 ---
 ```
 
@@ -113,7 +113,7 @@ Multiple patterns:
 ```yaml
 ---
 inclusion: fileMatch
-fileMatchPattern: ["**/*.ts", "**/*.tsx", "**/tsconfig.*.json"]
+fileMatchPattern: ['**/*.ts', '**/*.tsx', '**/tsconfig.*.json']
 ---
 ```
 
@@ -144,9 +144,7 @@ Kiro uses the `description` to decide when the file is relevant.
 Link to live workspace files to keep steering current:
 
 ```markdown
-#[[file:api/openapi.yaml]]
-#[[file:components/ui/button.tsx]]
-#[[file:.env.example]]
+#[[file:api/openapi.yaml]] #[[file:components/ui/button.tsx]] #[[file:.env.example]]
 ```
 
 ## AGENTS.md Support

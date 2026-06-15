@@ -1,5 +1,7 @@
 # Kiro WSL AWS Setup Guide
 
+[![Deploy to GitHub Pages](https://github.com/jajera/kiro-wsl-aws-setup-guide/actions/workflows/deploy.yml/badge.svg)](https://github.com/jajera/kiro-wsl-aws-setup-guide/actions/workflows/deploy.yml)
+
 Astro Starlight documentation site for the WSL2 + Docker Desktop + Kiro IDE + AWS SSO setup guide.
 
 ## Technology Stack

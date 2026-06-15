@@ -4,12 +4,12 @@ title: 'Workspace Settings'
 
 Kiro is built on VS Code's open-source foundation, so it uses the same `.vscode/settings.json` for editor behavior, formatters, terminal environment, and linting. Meanwhile, `.kiro/` handles AI-specific configuration (steering, MCP servers, specs).
 
-| Directory | Purpose |
-| --------- | ------- |
-| `.vscode/settings.json` | Editor, formatter, linter, terminal, and extension settings |
-| `.vscode/extensions.json` | Recommended extensions for the project |
-| `.kiro/steering/` | AI behavior and project context for the agent |
-| `.kiro/settings/mcp.json` | MCP server configuration (workspace-level) |
+| Directory                 | Purpose                                                     |
+| ------------------------- | ----------------------------------------------------------- |
+| `.vscode/settings.json`   | Editor, formatter, linter, terminal, and extension settings |
+| `.vscode/extensions.json` | Recommended extensions for the project                      |
+| `.kiro/steering/`         | AI behavior and project context for the agent               |
+| `.kiro/settings/mcp.json` | MCP server configuration (workspace-level)                  |
 
 Both directories are per-project and can be committed to version control for team consistency.
 
@@ -73,15 +73,15 @@ EOF
 
 ## What Each Section Does
 
-| Setting | Purpose |
-| ------- | ------- |
-| `terminal.integrated.env.linux` | Injects environment variables into every new terminal in this workspace |
-| `files.exclude` | Hides noisy directories from the file explorer (Terraform state, caches, node_modules) |
-| `editor.formatOnSave` | Automatically formats files when you save — formatters configured per language below |
-| `[terraform]` / `[terraform-vars]` | Uses the HashiCorp Terraform extension as the formatter (2-space indent) |
-| `[json]` / `[yaml]` | Uses Prettier as the formatter |
-| `[markdown]` | Uses markdownlint for auto-fixing on save |
-| `git.autofetch` / `enableSmartCommit` | Fetches remote changes in background and allows staging-less commits |
+| Setting                               | Purpose                                                                                |
+| ------------------------------------- | -------------------------------------------------------------------------------------- |
+| `terminal.integrated.env.linux`       | Injects environment variables into every new terminal in this workspace                |
+| `files.exclude`                       | Hides noisy directories from the file explorer (Terraform state, caches, node_modules) |
+| `editor.formatOnSave`                 | Automatically formats files when you save — formatters configured per language below   |
+| `[terraform]` / `[terraform-vars]`    | Uses the HashiCorp Terraform extension as the formatter (2-space indent)               |
+| `[json]` / `[yaml]`                   | Uses Prettier as the formatter                                                         |
+| `[markdown]`                          | Uses markdownlint for auto-fixing on save                                              |
+| `git.autofetch` / `enableSmartCommit` | Fetches remote changes in background and allows staging-less commits                   |
 
 ## What `terminal.integrated.env.linux` Does
 
@@ -112,14 +112,14 @@ aws sts get-caller-identity
 
 There are two ways to set `AWS_PROFILE` in your terminal:
 
-| Method | Where it's set | Scope |
-| ------ | -------------- | ----- |
-| `.vscode/settings.json` → `terminal.integrated.env.linux` | Per-project workspace setting | Every new terminal in that Kiro workspace |
-| `export AWS_PROFILE=...` in `~/.bashrc` | Shell profile (global) | Every bash session, including non-Kiro terminals |
+| Method                                                    | Where it's set                | Scope                                            |
+| --------------------------------------------------------- | ----------------------------- | ------------------------------------------------ |
+| `.vscode/settings.json` → `terminal.integrated.env.linux` | Per-project workspace setting | Every new terminal in that Kiro workspace        |
+| `export AWS_PROFILE=...` in `~/.bashrc`                   | Shell profile (global)        | Every bash session, including non-Kiro terminals |
 
 **Precedence rules:**
 
-1. **Workspace setting wins over `~/.bashrc`** — When Kiro opens a terminal, it injects `terminal.integrated.env.linux` variables *after* your shell profile runs. So if `~/.bashrc` exports `AWS_PROFILE=team-shared` but `.vscode/settings.json` sets `AWS_PROFILE=my-project-dev`, the terminal will use `my-project-dev`.
+1. **Workspace setting wins over `~/.bashrc`** — When Kiro opens a terminal, it injects `terminal.integrated.env.linux` variables _after_ your shell profile runs. So if `~/.bashrc` exports `AWS_PROFILE=team-shared` but `.vscode/settings.json` sets `AWS_PROFILE=my-project-dev`, the terminal will use `my-project-dev`.
 
 2. **Manual `export` in the same session wins last** — If you run `export AWS_PROFILE=something-else` in an already-open terminal, that overrides both. But only for that session — new terminals revert to the workspace setting.
 

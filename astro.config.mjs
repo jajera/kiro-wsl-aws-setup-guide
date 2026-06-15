@@ -22,8 +22,7 @@ export default defineConfig({
         },
       ],
       editLink: {
-        baseUrl:
-          'https://github.com/jajera/kiro-wsl-aws-setup-guide/edit/main/',
+        baseUrl: 'https://github.com/jajera/kiro-wsl-aws-setup-guide/edit/main/',
       },
       lastUpdated: true,
       pagination: true,
@@ -128,10 +127,7 @@ export default defineConfig({
         {
           label: 'Next Steps',
           collapsed: false,
-          items: [
-            { slug: 'next-steps/what-to-do-next' },
-            { slug: 'next-steps/quick-reference' },
-          ],
+          items: [{ slug: 'next-steps/what-to-do-next' }, { slug: 'next-steps/quick-reference' }],
         },
       ],
     }),
