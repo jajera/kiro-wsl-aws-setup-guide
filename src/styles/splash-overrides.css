@@ -1,0 +1,11 @@
+/* Theme overrides */
+
+/* Align section group headers with top-level links like Introduction */
+.sidebar-pane ul.top-level > li > details > summary {
+  padding-inline-start: var(--sl-sidebar-item-padding-inline) !important;
+}
+
+/* Hide the collapse caret arrow from sidebar group headers */
+.sidebar-pane ul.top-level > li > details > summary .caret {
+  display: none !important;
+}

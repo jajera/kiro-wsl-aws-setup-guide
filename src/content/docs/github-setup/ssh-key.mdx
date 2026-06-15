@@ -1,0 +1,31 @@
+---
+title: 'Generate GitHub SSH Key'
+---
+
+Generate an Ed25519 SSH key pair for GitHub authentication:
+
+```bash
+ssh-keygen -t ed25519 -C "your.email@example.com"
+```
+
+When prompted:
+
+- **File location:** Press Enter to accept the default (`~/.ssh/id_ed25519`)
+- **Passphrase:** Enter a passphrase (recommended) or press Enter for none
+
+Start the SSH agent and add your key:
+
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+> **WSL2 does not persist the SSH agent across sessions.** Each time you open a new terminal, you may need to re-run `eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519`. To automate this, add the following to your `~/.bashrc`:
+>
+> ```bash
+> # Auto-start SSH agent
+> if [ -z "$SSH_AUTH_SOCK" ]; then
+>   eval "$(ssh-agent -s)" > /dev/null
+>   ssh-add ~/.ssh/id_ed25519 2>/dev/null
+> fi
+> ```

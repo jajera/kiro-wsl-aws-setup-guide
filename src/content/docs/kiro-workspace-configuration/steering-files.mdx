@@ -1,0 +1,163 @@
+---
+title: 'Steering Files'
+---
+
+Steering gives Kiro persistent knowledge about your workspace through markdown files. Instead of explaining your conventions in every chat, steering files ensure Kiro consistently follows your established patterns, libraries, and standards.
+
+## Steering File Scope
+
+| Level | Path | Applies to |
+| ----- | ---- | ---------- |
+| Workspace | `.kiro/steering/` | Current project only |
+| Global | `~/.kiro/steering/` | All workspaces |
+
+Workspace steering takes precedence over global steering when there are conflicting instructions.
+
+## Generate Foundational Steering Files
+
+Kiro can auto-generate three foundational files that establish core project context:
+
+1. Open the **Kiro panel** (sidebar)
+2. Navigate to the **Steering** section
+3. Click **Generate Steering Docs** (or click **+** → **Foundation steering files**)
+
+Kiro creates:
+
+| File | Purpose |
+| ---- | ------- |
+| `product.md` | Product purpose, target users, key features, business objectives |
+| `tech.md` | Frameworks, libraries, development tools, technical constraints |
+| `structure.md` | File organization, naming conventions, import patterns, architecture |
+
+These are included in every interaction by default.
+
+## Create Custom Steering Files
+
+Create the directory structure:
+
+```bash
+mkdir -p .kiro/steering
+```
+
+### Example: Project Context
+
+```bash
+cat > .kiro/steering/project.md << 'EOF'
+---
+inclusion: always
+---
+
+# Project Context
+
+## Tech Stack
+- Infrastructure: Terraform (AWS provider)
+- Runtime: Docker containers on ECS
+- CI/CD: GitHub Actions
+- Cloud: AWS (ap-southeast-2)
+
+## Conventions
+- Use kebab-case for resource names
+- Tag all AWS resources with `project`, `environment`, and `owner`
+- Terraform modules live in `modules/`
+- Environment configs live in `environments/<env>/`
+
+## AWS
+- SSO profile: use the profile configured in `~/.aws/config`
+- Region: ap-southeast-2 (unless the module specifies otherwise)
+EOF
+```
+
+### Example: Terraform Conventions (File-Matched)
+
+```bash
+cat > .kiro/steering/terraform.md << 'EOF'
+---
+inclusion: fileMatch
+fileMatchPattern: ["**/*.tf", "**/*.tfvars"]
+---
+
+# Terraform Conventions
+
+- Use `terraform fmt` before committing
+- Pin provider versions in `versions.tf`
+- Use `locals` for computed values, `variables` for inputs
+- Output important resource ARNs and endpoints
+- Two-space indentation for all `.tf` files
+EOF
+```
+
+This file is only included when you're working on `.tf` or `.tfvars` files.
+
+## Inclusion Modes
+
+Control when each steering file is loaded using YAML front matter:
+
+| Mode | Front matter | Behavior |
+| ---- | ------------ | -------- |
+| Always (default) | `inclusion: always` | Loaded in every interaction |
+| File match | `inclusion: fileMatch` | Loaded only when working with matching files |
+| Manual | `inclusion: manual` | Available on-demand via `#filename` in chat |
+| Auto | `inclusion: auto` | Loaded when your request matches the description |
+
+### File match patterns
+
+```yaml
+---
+inclusion: fileMatch
+fileMatchPattern: "components/**/*.tsx"
+---
+```
+
+Multiple patterns:
+
+```yaml
+---
+inclusion: fileMatch
+fileMatchPattern: ["**/*.ts", "**/*.tsx", "**/tsconfig.*.json"]
+---
+```
+
+### Manual inclusion
+
+```yaml
+---
+inclusion: manual
+---
+```
+
+Reference in chat with `#steering-file-name`. Manual steering files also appear as slash commands — type `/` in chat to see them.
+
+### Auto inclusion
+
+```yaml
+---
+inclusion: auto
+name: api-design
+description: REST API design patterns and conventions. Use when creating or modifying API endpoints.
+---
+```
+
+Kiro uses the `description` to decide when the file is relevant.
+
+## File References
+
+Link to live workspace files to keep steering current:
+
+```markdown
+#[[file:api/openapi.yaml]]
+#[[file:components/ui/button.tsx]]
+#[[file:.env.example]]
+```
+
+## AGENTS.md Support
+
+Kiro supports the [AGENTS.md](https://agents.md/) standard. Place an `AGENTS.md` file in your workspace root or in `~/.kiro/steering/` — it will be picked up automatically (no inclusion modes, always included).
+
+## Best Practices
+
+- **One domain per file** — API design, testing, deployment, security
+- **Use clear names** — `api-rest-conventions.md`, `testing-unit-patterns.md`
+- **Explain why** — Include rationale for decisions, not just rules
+- **Include examples** — Code snippets and before/after comparisons
+- **Never include secrets** — No API keys, passwords, or sensitive data
+- **Review regularly** — Update during sprint planning and architecture changes

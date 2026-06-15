@@ -1,0 +1,145 @@
+---
+title: 'Verification Checklist'
+---
+
+## Step 1: Verify WSL2 Is Running
+
+Open **PowerShell** and run:
+
+```powershell
+wsl --list --verbose
+```
+
+**Expected:**
+
+```text
+  NAME              STATE           VERSION
+* docker-desktop    Running         2
+  Ubuntu-26.04      Running         2
+```
+
+- Your Ubuntu distro must show **Running** and **VERSION 2**
+- `docker-desktop` should also show **Running**
+- The `*` (default) may point to either `docker-desktop` or `Ubuntu-26.04` — both are fine. What matters is that Ubuntu shows `Running` and `VERSION 2`.
+
+## Step 2: Verify Docker from WSL2
+
+Open your **WSL2 bash** terminal (`devuser@...$`) and run:
+
+```bash
+docker --version
+docker ps
+docker run --rm hello-world
+```
+
+**Expected:**
+
+- `docker --version` prints a version string (e.g., `Docker version 28.x.x`)
+- `docker ps` returns an empty container list (no errors)
+- `docker run --rm hello-world` prints "Hello from Docker!" and exits cleanly
+
+## Step 3: Verify Git Configuration
+
+Still in WSL2 bash:
+
+```bash
+git config --global user.name
+git config --global user.email
+```
+
+**Expected:** Both commands return your configured name and email address.
+
+## Step 4: Verify SSH Connection to GitHub
+
+```bash
+ssh -T git@github.com
+```
+
+**Expected:**
+
+```text
+Hi <your-username>! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+- If you see a host key confirmation prompt, type **`yes`** and press Enter
+- The important part is the "successfully authenticated" message
+
+## Step 5: Verify AWS SSO Login
+
+```bash
+aws sso login --profile <your-profile-name>
+```
+
+**Expected:**
+
+1. A browser window opens to your AWS SSO portal
+2. You authenticate and approve the request
+3. The terminal shows a success message confirming you are logged in
+
+Then verify your credentials are active:
+
+```bash
+aws sts get-caller-identity --profile <your-profile-name>
+```
+
+**Expected:** JSON output containing your `UserId`, `Account`, and `Arn`.
+
+## Step 6: Verify Kiro Connects to WSL
+
+1. Open **Kiro IDE** on Windows
+2. Open the Remote Explorer or use the command palette: **Remote-WSL: Connect to WSL**
+3. Select your Ubuntu distribution
+
+**Expected:**
+
+- Kiro connects and the bottom-left indicator shows **WSL: Ubuntu-26.04** (or your distro name)
+- The integrated terminal opens a WSL2 bash session
+
+![Kiro IDE showing WSL connection targets in Remote Explorer](/kiro-wsl-aws-setup-guide/images/kiro-wsl-targets.png)
+
+## Step 7: Verify Workspace Opens Correctly
+
+In the Kiro WSL terminal:
+
+```bash
+cd ~/workspace/<your-project>
+```
+
+Then from Kiro: **File → Open Folder** → select the project directory inside WSL.
+
+**Expected:**
+
+- The workspace trust dialog appears — click **Yes, I trust the authors**
+- Files and folders appear in the Explorer sidebar
+- The terminal shows your WSL2 bash prompt in the correct directory
+
+![Kiro workspace trust dialog when opening a project folder](/kiro-wsl-aws-setup-guide/images/kiro-workspace-trust.png)
+
+## Full Environment Checklist
+
+Run this one-shot verification script in WSL2 bash to check multiple components at once:
+
+```bash
+echo "=== Environment Verification ==="
+echo ""
+echo "1. WSL2 kernel:"
+uname -r
+echo ""
+echo "2. Docker:"
+docker --version 2>/dev/null && echo "  ✓ Docker accessible" || echo "  ✗ Docker not found"
+echo ""
+echo "3. Git:"
+git --version
+echo "   user.name: $(git config --global user.name)"
+echo "   user.email: $(git config --global user.email)"
+echo ""
+echo "4. SSH agent:"
+ssh-add -l 2>/dev/null && echo "  ✓ Keys loaded" || echo "  ⚠ No keys loaded (run ssh-add)"
+echo ""
+echo "5. AWS CLI:"
+aws --version 2>/dev/null && echo "  ✓ AWS CLI installed" || echo "  ✗ AWS CLI not found"
+echo ""
+echo "=== Done ==="
+```
+
+**Expected:** All items show version numbers or checkmarks. Address any `✗` items by revisiting the corresponding section.

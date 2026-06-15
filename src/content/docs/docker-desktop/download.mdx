@@ -1,0 +1,54 @@
+---
+title: 'Download Docker Desktop'
+---
+
+Docker Desktop is the container runtime this guide uses. Install it on **Windows** now. WSL integration with your Ubuntu distro is configured later in the Docker WSL2 Integration section (after Ubuntu is installed).
+
+## Download the Installer
+
+**Option A — Direct download in browser:**
+
+- **Windows x64 (most PCs):** [Docker Desktop Installer.exe](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
+- Save to your `Downloads` folder
+
+**Option B — Download via PowerShell (recommended):**
+
+Use this filename (no spaces — required for `curl.exe` on Windows):
+
+```powershell
+curl.exe -L -o "$env:USERPROFILE\Downloads\DockerDesktopInstaller.exe" "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe"
+```
+
+**If that fails**, use PowerShell's built-in downloader:
+
+```powershell
+Invoke-WebRequest -Uri "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe" -OutFile "$env:USERPROFILE\Downloads\DockerDesktopInstaller.exe" -UseBasicParsing
+```
+
+**Before retrying** after a failed download, delete any partial file:
+
+```powershell
+Remove-Item -Force "$env:USERPROFILE\Downloads\DockerDesktopInstaller.exe" -ErrorAction SilentlyContinue
+```
+
+**Expected in Downloads** — your file should look like this:
+
+![Docker Desktop installer downloaded successfully showing file name and size of approximately 620 to 640 MB](/kiro-wsl-aws-setup-guide/images/docker-desktop-installer-download.png)
+
+| Check | Expected                       |
+| ----- | ------------------------------ |
+| Name  | `DockerDesktopInstaller`       |
+| Type  | Application                    |
+| Size  | ~620–640 MB (e.g., 638,618 KB) |
+
+If the size is only a few KB, the download failed — delete the file and retry.
+
+**Option C — Product page (if direct links fail):**
+
+1. Open [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+2. Click **Download for Windows**
+3. Save to `Downloads`
+
+> **Do not** download Docker Engine for Linux at this stage. You need **Docker Desktop for Windows**.
+>
+> **Not sure which installer?** Almost all Windows PCs use **x64 (amd64)**. Only **Windows on ARM** devices need: `https://desktop.docker.com/win/main/arm64/Docker%20Desktop%20Installer.exe`

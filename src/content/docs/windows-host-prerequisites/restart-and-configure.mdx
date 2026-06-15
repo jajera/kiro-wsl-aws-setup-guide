@@ -1,0 +1,39 @@
+---
+title: 'Restart and Configure WSL2 Default'
+---
+
+## Restart Windows
+
+A restart is **required** after enabling the features above. The features are not active until the system reboots.
+
+**Option A — from PowerShell:**
+
+```powershell
+Restart-Computer
+```
+
+**Option B — manually:** Start menu → **Power** → **Restart**
+
+**Before continuing:** Log back into Windows and wait until the desktop is fully loaded. Do not proceed until the restart is complete.
+
+## Set WSL2 as Default Version
+
+After the restart, open **PowerShell as Administrator** again and run:
+
+```powershell
+wsl --set-default-version 2
+```
+
+**Expected:** `For information on key differences with WSL 2 please visit...` followed by confirmation, or no error.
+
+**Verify immediately:**
+
+```powershell
+wsl --status
+```
+
+**Expected output includes:** `Default Version: 2`
+
+> **If prompted to update WSL:** Run `wsl --update` (only when Windows shows the update message), restart if asked, then re-run `wsl --set-default-version 2`.
+>
+> **If you see a kernel component message:** Run `wsl --update` first. If that does not resolve it, install the fallback package from [https://aka.ms/wsl2kernel](https://aka.ms/wsl2kernel), then re-run the command above.

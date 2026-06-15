@@ -1,0 +1,78 @@
+---
+title: 'MCP Servers'
+---
+
+MCP (Model Context Protocol) servers extend Kiro with additional tools. Configure them in `.kiro/settings/mcp.json` in your workspace:
+
+```bash
+mkdir -p .kiro/settings
+cat > .kiro/settings/mcp.json << 'EOF'
+{
+  "mcpServers": {
+    "aws": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+}
+EOF
+```
+
+This example configures the **AWS Documentation MCP server**, which gives Kiro access to AWS documentation for more accurate infrastructure guidance.
+
+## Configuration Levels
+
+MCP servers can be configured at two levels:
+
+| Level | Path | Scope |
+| ----- | ---- | ----- |
+| Workspace | `.kiro/settings/mcp.json` | Applies only to the current project |
+| User | `~/.kiro/settings/mcp.json` | Applies globally across all workspaces |
+
+If both files exist, workspace settings take precedence. Use workspace-level for project-specific servers and user-level for servers you use everywhere.
+
+## Configuration Properties
+
+Each server entry supports these properties:
+
+| Property | Description |
+| -------- | ----------- |
+| `command` | Command to run the server (e.g., `uvx`, `npx`, `node`) |
+| `args` | Arguments to pass to the command |
+| `env` | Environment variables for the server process (supports `${VAR}` expansion) |
+| `disabled` | Set to `true` to temporarily disable without removing config |
+| `autoApprove` | Tool names to auto-approve without prompting (use `"*"` for all) |
+| `disabledTools` | Tool names to omit from the agent |
+
+## Available MCP Servers
+
+| Server            | Use case                            | Command                                           |
+| ----------------- | ----------------------------------- | ------------------------------------------------- |
+| AWS Documentation | AWS service docs and best practices | `uvx awslabs.aws-documentation-mcp-server@latest` |
+| AWS CDK           | CDK construct guidance              | `uvx awslabs.cdk-mcp-server@latest`               |
+| Terraform         | Terraform provider docs             | Community MCP servers available                   |
+
+> **Prerequisite for `uvx`:** The `uvx` command comes from the `uv` Python package manager. If you did not install it during the WSL2 packages step, install it now:
+>
+> ```bash
+> curl -LsSf https://astral.sh/uv/install.sh | sh
+> source ~/.bashrc
+> uvx --version
+> ```
+>
+> `uv` is not included in the essential packages installed earlier because it's only needed if you use MCP servers that rely on `uvx`.
+
+## Verify MCP Configuration
+
+After saving `.kiro/settings/mcp.json`:
+
+- Changes apply automatically when you save the file — servers reconnect without restarting Kiro
+- Open the **Kiro panel** to check server status (running, connected, or error)
+- If a server fails to start, check:
+  - The `command` is available in your WSL PATH
+  - Required environment variables are set
+  - Network access is available (some servers fetch remote resources)
+  - JSON syntax is valid (no missing commas or brackets)

@@ -1,0 +1,141 @@
+---
+title: 'Workspace Settings'
+---
+
+Kiro is built on VS Code's open-source foundation, so it uses the same `.vscode/settings.json` for editor behavior, formatters, terminal environment, and linting. Meanwhile, `.kiro/` handles AI-specific configuration (steering, MCP servers, specs).
+
+| Directory | Purpose |
+| --------- | ------- |
+| `.vscode/settings.json` | Editor, formatter, linter, terminal, and extension settings |
+| `.vscode/extensions.json` | Recommended extensions for the project |
+| `.kiro/steering/` | AI behavior and project context for the agent |
+| `.kiro/settings/mcp.json` | MCP server configuration (workspace-level) |
+
+Both directories are per-project and can be committed to version control for team consistency.
+
+## Create `.vscode/settings.json`
+
+```bash
+mkdir -p .vscode
+cat > .vscode/settings.json << 'EOF'
+{
+  "terminal.integrated.env.linux": {
+    "AWS_PROFILE": "your-sso-profile-name"
+  },
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.copyOnSelection": true,
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "files.insertFinalNewline": true,
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/.terraform": true,
+    "**/.terragrunt-cache": true,
+    "**/__pycache__": true,
+    "**/node_modules": true,
+    "**/*.tfstate": true,
+    "**/*.tfstate.*": true
+  },
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnSave": true
+  },
+  "git.autofetch": true,
+  "git.enableSmartCommit": true
+}
+EOF
+```
+
+> **Replace `your-sso-profile-name`** with the profile name from `~/.aws/config` (e.g., `my-org-dev`). This is the profile you configured with `aws configure sso` in the AWS Setup section.
+
+## What Each Section Does
+
+| Setting | Purpose |
+| ------- | ------- |
+| `terminal.integrated.env.linux` | Injects environment variables into every new terminal in this workspace |
+| `files.exclude` | Hides noisy directories from the file explorer (Terraform state, caches, node_modules) |
+| `editor.formatOnSave` | Automatically formats files when you save — formatters configured per language below |
+| `[terraform]` / `[terraform-vars]` | Uses the HashiCorp Terraform extension as the formatter (2-space indent) |
+| `[json]` / `[yaml]` | Uses Prettier as the formatter |
+| `[markdown]` | Uses markdownlint for auto-fixing on save |
+| `git.autofetch` / `enableSmartCommit` | Fetches remote changes in background and allows staging-less commits |
+
+## What `terminal.integrated.env.linux` Does
+
+Setting `AWS_PROFILE` in workspace settings means **every new terminal** opened in this Kiro workspace automatically uses that AWS profile. You no longer need to run `export AWS_PROFILE=...` manually each session.
+
+![Kiro WSL terminal with integrated environment configured](/kiro-wsl-aws-setup-guide/images/kiro-wsl-terminal.png)
+
+## Verify the Workspace Setting Works
+
+1. Open a **new** terminal in Kiro: `` Ctrl+` `` → click **+** (or `Ctrl+Shift+``)
+2. Check the active profile:
+
+```bash
+echo $AWS_PROFILE
+```
+
+**Expected:** Your profile name (e.g., `my-org-dev`)
+
+3. Confirm AWS access:
+
+```bash
+aws sts get-caller-identity
+```
+
+**Expected:** JSON output with your `Account`, `UserId`, and `Arn`. If you see a credentials error, run `aws sso login` first (the profile is set, but the SSO session may have expired).
+
+## Workspace Setting vs `export AWS_PROFILE` — Which Wins?
+
+There are two ways to set `AWS_PROFILE` in your terminal:
+
+| Method | Where it's set | Scope |
+| ------ | -------------- | ----- |
+| `.vscode/settings.json` → `terminal.integrated.env.linux` | Per-project workspace setting | Every new terminal in that Kiro workspace |
+| `export AWS_PROFILE=...` in `~/.bashrc` | Shell profile (global) | Every bash session, including non-Kiro terminals |
+
+**Precedence rules:**
+
+1. **Workspace setting wins over `~/.bashrc`** — When Kiro opens a terminal, it injects `terminal.integrated.env.linux` variables *after* your shell profile runs. So if `~/.bashrc` exports `AWS_PROFILE=team-shared` but `.vscode/settings.json` sets `AWS_PROFILE=my-project-dev`, the terminal will use `my-project-dev`.
+
+2. **Manual `export` in the same session wins last** — If you run `export AWS_PROFILE=something-else` in an already-open terminal, that overrides both. But only for that session — new terminals revert to the workspace setting.
+
+3. **No workspace setting?** Falls back to `~/.bashrc` → falls back to no profile (you must pass `--profile` explicitly).
+
+**Recommended approach:**
+
+- Use `.vscode/settings.json` for project-specific profiles (one profile per project)
+- Remove `export AWS_PROFILE` from `~/.bashrc` to avoid confusion
+- If you work on a single project only, either method works fine
+
+**Example — two projects, two accounts:**
+
+```text
+~/workspace/project-alpha/.vscode/settings.json  → AWS_PROFILE=alpha-dev
+~/workspace/project-beta/.vscode/settings.json   → AWS_PROFILE=beta-staging
+```
+
+Open `project-alpha` in Kiro → terminals use `alpha-dev`. Switch to `project-beta` → terminals use `beta-staging`. No manual exporting needed.

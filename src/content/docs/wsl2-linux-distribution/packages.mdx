@@ -1,0 +1,84 @@
+---
+title: 'Update Packages and Install Essentials'
+---
+
+## Update the Package Manager
+
+You must be at a WSL2 **bash** prompt (`devuser@...`). Run:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+- When prompted for `[sudo] password for devuser:`, enter the password you created during user creation (no characters will show)
+- Wait for completion — may take several minutes
+
+**Expected:** Command finishes without `E:` error lines at the end.
+
+## Install Essential Packages
+
+Still in WSL2 bash:
+
+```bash
+sudo apt install -y build-essential curl wget git unzip ca-certificates
+```
+
+**Expected:** Ends with `Setting up...` messages and returns to the prompt with no errors.
+
+**What each package provides:**
+
+| Package           | Purpose                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| `build-essential` | GCC compiler, make, and other build tools required for compiling native extensions    |
+| `curl`            | Command-line tool for transferring data via HTTP/HTTPS (used by many install scripts) |
+| `wget`            | Alternative download tool, useful for fetching files and installers                   |
+| `git`             | Version control system for cloning repositories and managing source code              |
+| `unzip`           | Extracts ZIP archives (required by AWS CLI installer and other tools)                 |
+| `ca-certificates` | Root CA certificates for verifying HTTPS connections                                  |
+
+## Verify
+
+Run these in **two different shells**:
+
+**1. PowerShell** — open a new PowerShell window (Start → `PowerShell`). `wsl --list --verbose` does not run inside Ubuntu.
+
+```powershell
+wsl --list --verbose
+```
+
+**Expected:**
+
+```text
+  NAME              STATE           VERSION
+* docker-desktop    Running         2
+  Ubuntu-26.04      Running         2
+```
+
+- **`Ubuntu-26.04`** (or your distro name) must show **Running** and **VERSION 2**
+- **`docker-desktop`** may also appear — that is normal after Docker Desktop install
+- The `*` default may point to `docker-desktop` instead of Ubuntu — that is fine
+
+**2. WSL2 bash** — use the Ubuntu window from above (`devuser@...$`):
+
+```bash
+dpkg -l build-essential curl wget git unzip ca-certificates | grep "^ii"
+```
+
+**Expected** — six lines starting with `ii`:
+
+```text
+ii  build-essential 12.12ubuntu2      amd64        Informational list of build-essential packages
+ii  ca-certificates 20260223          all          Common CA certificates
+ii  curl            8.18.0-1ubuntu2.1 amd64        command line tool for transferring data with URL syntax
+ii  git             1:2.53.0-1ubuntu1 amd64        fast, scalable, distributed revision control system
+ii  unzip           6.0-29ubuntu1     amd64        De-archiver for .zip files
+ii  wget            1.25.0-2ubuntu4   amd64        retrieves files from the web
+```
+
+Version numbers may differ slightly — all six packages must show `ii`.
+
+If any package is missing (no `ii` line), re-run:
+
+```bash
+sudo apt install -y <missing-package-name>
+```

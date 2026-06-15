@@ -1,0 +1,29 @@
+---
+title: 'Re-Sign In for WSL Window'
+---
+
+## Re-sign Kiro in the WSL Window
+
+Org subscription from the initial Kiro sign-in does **not** carry over to the WSL remote window. If credits show **Kiro Free 50 / 50**, sign in again (**Your organization** → IAM Identity Center, same Start URL and Region).
+
+> **Kiro sign-in ≠ AWS CLI.** AWS config (`~/.aws`, `aws sso login`, profiles) is on the **WSL host** in the GitHub/AWS Setup sections — not on Windows. Never symlink `~/.aws` to `C:\Users\...\.aws`.
+
+## Fix `.aws` Symlink Issues
+
+**If Kiro shows "Unable to access path: `~/.aws/sso/cache/...`"** — check whether `~/.aws` is a symlink to Windows:
+
+```bash
+ls -la ~/.aws
+```
+
+If it shows `lrwxrwxrwx ... /mnt/c/Users/...`:
+
+```bash
+rm ~/.aws
+mkdir -p ~/.aws/sso/cache
+chmod 700 ~/.aws ~/.aws/sso ~/.aws/sso/cache
+```
+
+![Kiro .aws/sso/cache permission error in WSL](/kiro-wsl-aws-setup-guide/images/kiro-wsl-aws-sso-permission-error.png)
+
+Re-sign Kiro in the WSL window. AWS CLI setup continues in the AWS Setup section. Kiro workspace config is in the Kiro Workspace Configuration section.

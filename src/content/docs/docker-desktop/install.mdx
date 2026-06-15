@@ -1,0 +1,26 @@
+---
+title: 'Install Docker Desktop'
+---
+
+## Run the Installer
+
+1. Open File Explorer → **Downloads**
+2. Double-click **`DockerDesktopInstaller`** (or `DockerDesktopInstaller.exe`)
+3. On the **Configuration** screen, match these settings (defaults are fine for most users):
+
+![Docker Desktop installer configuration screen with Use WSL 2 checked and Windows Containers unchecked](/kiro-wsl-aws-setup-guide/images/docker-desktop-installer-configuration.png)
+
+| Option                                                  | Required setting                                                          |
+| ------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **All-users installation** or **Per-user installation** | Either is OK — **All-users** (default) is fine if you have admin rights   |
+| **Use WSL 2 instead of Hyper-V**                        | **Checked** (required)                                                    |
+| **Allow Windows Containers**                            | **Unchecked** (leave off unless you specifically need Windows containers) |
+| **Add shortcut to desktop**                             | Optional (your choice)                                                    |
+
+4. Click **OK**
+5. If Windows shows **User Account Control** ("Do you want to allow this app to make changes?"), click **Yes** — this is expected with **All-users installation**
+6. Wait for the installation to finish (several minutes)
+7. When the installer completes, click **Close**
+8. If prompted to **Close and restart** Windows, restart before continuing
+
+> **If "Use WSL 2" is greyed out or missing:** WSL2 is not ready yet. Go back and confirm `wsl --status` shows `Default Version: 2`, then re-run the Docker installer.
