@@ -1,0 +1,52 @@
+---
+title: 'Install Ubuntu'
+---
+
+Open **PowerShell as Administrator**.
+
+## List Available Distributions
+
+```powershell
+wsl --list --online
+```
+
+**Expected:** A table listing available distros. Look for `Ubuntu-26.04` or `Ubuntu-24.04`.
+
+## Install Ubuntu
+
+**Preferred (Ubuntu 26.04 LTS):**
+
+```powershell
+wsl --install -d Ubuntu-26.04
+```
+
+**If `Ubuntu-26.04` is not in the list:**
+
+```powershell
+wsl --install -d Ubuntu-24.04
+```
+
+**What happens next:**
+
+1. Windows may show: _"Windows Subsystem for Linux must be updated..."_ → run `wsl --update`, restart if asked, retry
+2. Windows may show: _"Press any key to install Windows Subsystem for Linux"_ → **press any key** to continue
+3. Download and install progress appears — wait until it finishes (several minutes)
+4. A terminal window opens automatically for first-time setup (User Creation)
+
+> **Note:** Ubuntu 24.04 works with this guide if 26.04 is unavailable.
+
+**Alternative — install from file** (if `wsl --install -d` fails):
+
+```powershell
+curl.exe -LO https://releases.ubuntu.com/26.04/ubuntu-26.04-wsl-amd64.wsl
+wsl --install --from-file .\ubuntu-26.04-wsl-amd64.wsl --name Ubuntu-26.04
+```
+
+> **Warning:** Manual `.wsl` imports may land you in a root shell without the user creation prompts. If this happens, create a default user by adding the following to `/etc/wsl.conf` inside the distro, then restart it with `wsl --shutdown`:
+>
+> ```ini
+> [user]
+> default=devuser
+> ```
+>
+> You will also need to create the user manually: `adduser devuser && usermod -aG sudo devuser`. The `wsl --install -d` method above is strongly preferred as it handles this automatically.

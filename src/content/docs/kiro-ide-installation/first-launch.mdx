@@ -1,0 +1,36 @@
+---
+title: 'Kiro IDE First Launch'
+---
+
+## First Launch
+
+1. Kiro shows **Choose a way to sign in/sign up** with four options: **Google**, **GitHub**, **AWS Builder ID**, and **Your organization**. For this guide, click **Your organization** and sign in with your **work/organization identity** (the same account you use for **AWS IAM Identity Center** / SSO). The other options also work if that is how your team normally uses Kiro.
+
+![Kiro sign-in screen showing options for Google, GitHub, AWS Builder ID, and Your organization](/kiro-wsl-aws-setup-guide/images/kiro-sign-in.png)
+
+2. On **Sign in with your organization**, click **Sign in via IAM Identity Center instead** (bottom of the screen).
+
+![Kiro sign in with your organization screen showing Sign in via IAM Identity Center option](/kiro-wsl-aws-setup-guide/images/kiro-sign-in-organization.png)
+
+3. On **Sign in with AWS IAM Identity Center**, enter your organization's **Start URL** and **Region** (from your AWS administrator or Identity Center portal), then click **Continue** and complete browser sign-in.
+   - **Start URL:** `<YOUR_SSO_START_URL>` (e.g. `https://d-1234567890.awsapps.com/start`)
+   - **Region:** `<YOUR_SSO_REGION>` (e.g. `ap-southeast-2`)
+
+![Kiro AWS IAM Identity Center sign-in form with Start URL and Region fields](/kiro-wsl-aws-setup-guide/images/kiro-sign-in-identity-center.png)
+
+4. After browser sign-in, you may see **Allow Kiro IDE to access your data?** — click **Allow access** to finish linking Kiro to your organization identity.
+
+![Kiro authorization prompt asking to allow Kiro IDE to access your data](/kiro-wsl-aws-setup-guide/images/kiro-allow-access.png)
+
+5. **Verify sign-in worked** — open your Kiro account / usage panel (account menu → credits or usage). Check the **Credits** line:
+
+   - **50 credits (default)** — you are on the **free tier**, not your organization's subscription. Sign-in succeeded, but Kiro is not using your org plan. Confirm you chose **Your organization** → **Sign in via IAM Identity Center** with the correct Start URL and Region, or ask your administrator whether your org has Kiro provisioned.
+   - **Organization subscription** — you should see your org name (e.g. **Kiro Enterprise**), a plan badge (e.g. **Kiro Pro**), and credits such as **X used / Y covered in plan** (not the default 50). That confirms org Identity Center sign-in and subscription are active.
+
+![Kiro credits panel showing organization subscription active with credits covered in plan](/kiro-wsl-aws-setup-guide/images/kiro-credits-enterprise.png)
+
+> **WSL remote windows are separate.** Sign-in here applies to the **Windows** Kiro window only. You will need to re-sign in the WSL window later.
+
+6. Close Kiro for now — extensions are installed in the next section.
+
+> **Note:** Kiro IDE is built on the VS Code platform. Install the extensions from the Kiro IDE Extensions page via Kiro's Extensions panel (`Ctrl+Shift+X`).

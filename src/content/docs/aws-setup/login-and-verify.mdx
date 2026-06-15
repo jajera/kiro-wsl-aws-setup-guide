@@ -1,0 +1,37 @@
+---
+title: 'Login and Verify AWS Access'
+---
+
+## Log In to AWS SSO
+
+```bash
+aws sso login --profile <your-profile-name>
+```
+
+A browser window opens. Authorize the request, then return to the terminal.
+
+## Verify Access
+
+```bash
+aws sts get-caller-identity --profile <your-profile-name>
+```
+
+You should see your account ID, ARN, and user ID.
+
+## Set Default Profile
+
+To avoid passing `--profile` on every command, you have two options:
+
+**Option A — Workspace settings (recommended for Kiro users):**
+
+Configure `AWS_PROFILE` in your project's `.vscode/settings.json` under `terminal.integrated.env.linux`. This is covered in the Kiro Workspace Configuration section and is the preferred approach — it scopes the profile per-project automatically.
+
+**Option B — Shell environment (for non-Kiro terminals):**
+
+If you also use terminals outside Kiro (e.g., a standalone Ubuntu window), export the profile:
+
+```bash
+export AWS_PROFILE=<your-profile-name>
+```
+
+> **Note:** If you later configure `AWS_PROFILE` via workspace settings in Kiro, the workspace setting takes precedence over `~/.bashrc` in Kiro terminals. Avoid adding `export AWS_PROFILE` to `~/.bashrc` if you plan to use per-project workspace settings — it can cause confusion about which profile is active.

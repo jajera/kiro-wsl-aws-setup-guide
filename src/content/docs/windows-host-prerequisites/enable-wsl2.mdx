@@ -1,0 +1,26 @@
+---
+title: 'Enable WSL2 and Virtual Machine Platform'
+---
+
+## Open PowerShell as Administrator
+
+1. Press the **Windows** key and type `PowerShell`
+2. Right-click **Windows PowerShell** (or **Terminal (Admin)**) → **Run as administrator**
+3. If **User Account Control** appears, click **Yes**
+4. Confirm the window title bar says **Administrator** — commands will not work correctly in a standard (non-admin) window
+
+## Enable Required Windows Features
+
+Copy and paste both commands into the elevated PowerShell window:
+
+```powershell
+# Enable Windows Subsystem for Linux
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+# Enable Virtual Machine Platform
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+**Expected:** Each command prints `The operation completed successfully.`
+
+**If you see an error** about the feature not being found, confirm you are on Windows 10 build 19041+ or Windows 11.

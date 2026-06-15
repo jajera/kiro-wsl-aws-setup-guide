@@ -1,0 +1,62 @@
+---
+title: 'What to Do Next'
+---
+
+Now that your development environment is fully configured and verified, here are suggested next steps.
+
+## Create Your First Project
+
+1. Open Kiro IDE and connect to your WSL2 target
+2. Create a new workspace folder under your configured workspace directory:
+
+```bash
+mkdir -p ~/workspace/my-first-project && cd ~/workspace/my-first-project
+git init
+```
+
+3. Use Kiro's spec-driven development features to define your project requirements
+
+## Explore Kiro Features
+
+- **Specs:** Define feature requirements, designs, and implementation tasks using structured specifications
+- **Steering files:** Customize agent behavior with project-level steering in `.kiro/steering/`
+- **MCP servers:** Extend Kiro's capabilities with Model Context Protocol integrations configured in `.kiro/settings/mcp.json`
+- **Hooks:** Automate repetitive workflows with event-driven hooks
+
+## Learn Spec-Driven Development
+
+Kiro specs follow a structured workflow:
+
+1. **Requirements** — Define what the feature should do with acceptance criteria
+2. **Design** — Describe the architecture and correctness properties
+3. **Tasks** — Break implementation into trackable steps
+
+Start by creating a spec for a small feature to get familiar with the workflow.
+
+## Keep Your Environment Updated
+
+```bash
+# Update WSL2 packages
+sudo apt update && sudo apt upgrade -y
+
+# Update Docker Desktop
+# Check for updates via Docker Desktop GUI → Settings → Software updates
+```
+
+## Install Node.js (Optional)
+
+If your projects need Node.js, install it via [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager):
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+node --version
+```
+
+Once installed, keep it updated with:
+
+```bash
+nvm install --lts
+nvm alias default node
+```

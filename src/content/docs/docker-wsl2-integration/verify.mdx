@@ -1,0 +1,23 @@
+---
+title: 'Verify Docker in WSL2'
+---
+
+## Verify
+
+Run the same three commands in **WSL2 bash** (not PowerShell):
+
+```bash
+docker --version && docker ps && docker run --rm hello-world
+```
+
+All three must succeed. `hello-world` on Windows does **not** prove Docker works in WSL — this check does.
+
+## Troubleshooting
+
+| Symptom                                      | Cause                                                              | Fix                                                                                              |
+| -------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `docker: permission denied`                  | WSL Integration off for your distro, or Docker Desktop not running | Enable your distro under **WSL Integration** → **Apply & restart**                               |
+| `docker: command not found` in WSL           | Integration not enabled, or terminal opened before integration     | Complete the enable integration step above (fresh Ubuntu window)                                 |
+| `Cannot connect to the Docker daemon` in WSL | Docker Desktop not running                                         | Start Docker Desktop; wait for whale icon to steady                                              |
+| `docker run` works but `docker ps` empty     | `hello-world` used `--rm`                                          | Expected — container removed after exit                                                          |
+| `lookup docker.internal` errors              | Docker networking after sleep/hibernation                          | Restart Docker Desktop; if needed: `wsl --shutdown` in PowerShell, restart Docker, reopen Ubuntu |

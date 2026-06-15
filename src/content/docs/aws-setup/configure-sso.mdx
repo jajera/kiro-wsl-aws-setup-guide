@@ -1,0 +1,24 @@
+---
+title: 'Configure AWS SSO'
+---
+
+Configure an SSO profile. Replace the placeholder values with your organization's details:
+
+```bash
+aws configure sso
+```
+
+When prompted, provide:
+
+- **SSO session name:** a short label (e.g., `my-org`)
+- **SSO start URL:** your organization's AWS access portal URL (e.g., `https://d-xxxxxxxxxx.awsapps.com/start`)
+- **SSO region:** the region of your Identity Center instance (e.g., `us-east-1`)
+- **SSO registration scopes:** press Enter for default (`sso:account:access`)
+
+The CLI opens a browser for authentication. After approval:
+
+- Select the **AWS account** you want to use
+- Select the **permission set** (IAM role)
+- **CLI default client Region:** your preferred working region
+- **CLI default output format:** `json`
+- **CLI profile name:** accept the suggested name or enter your own

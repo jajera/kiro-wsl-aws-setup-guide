@@ -1,0 +1,28 @@
+---
+title: 'Configure argv.json for Remote WSL'
+---
+
+The Open Remote - WSL extension will not activate until it is listed in `enable-proposed-api`. Without this step, **Remote-WSL: Connect to WSL** fails with `command 'openremotewsl.connect' not found`.
+
+## Enable Proposed API
+
+1. `Ctrl+Shift+P` → **Preferences: Configure Runtime Arguments**
+2. Add `"enable-proposed-api"` to the existing file. **Keep all existing keys** — add a **comma** after the previous entry:
+
+```json
+        "crash-reporter-id": "10d99e86-1187-4493-b2e3-4ae1dbc4f458",
+
+        "enable-proposed-api": [
+                "jeanp413.open-remote-wsl"
+        ]
+```
+
+> `//` comments in `argv.json` are fine (JSONC). The usual error when merging is a **missing comma** before `"enable-proposed-api"`.
+
+3. Save → **fully quit and restart Kiro**
+
+**If Kiro shows "argv.json contains errors":**
+
+![Kiro argv.json contains errors notification](/kiro-wsl-aws-setup-guide/images/kiro-argv-json-error.png)
+
+Click **Open File**. Fix the missing comma or trailing comma → save → restart Kiro.

@@ -1,0 +1,31 @@
+---
+title: 'Verify Docker from Windows'
+---
+
+## Verify Docker from Windows PowerShell
+
+Open a **new** PowerShell window (does not need to be elevated) and run:
+
+```powershell
+docker --version
+# Expected: Docker version XX.X.X, build XXXXXXX
+
+docker ps
+# Expected: empty table with column headers, no error
+
+docker run --rm hello-world
+# Expected: "Hello from Docker!" and "This message shows that your installation appears to be working correctly."
+```
+
+If `docker run --rm hello-world` prints the success message, Docker Desktop is installed and running on Windows.
+
+## Common First-Run Mistakes
+
+| Mistake                                              | What happens                                                 | Fix                                                                              |
+| ---------------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| Closing Docker Desktop before the engine starts      | `docker ps` fails with "cannot connect to daemon"            | Start Docker Desktop from the Start menu; wait 30–60 seconds                     |
+| Using an old PowerShell window opened before install | `docker: command not found`                                  | Close the terminal and open a **new** PowerShell window                          |
+| Hyper-V backend selected instead of WSL 2            | Poor WSL performance; WSL integration issues                 | Settings → General → enable **Use the WSL 2 based engine** → **Apply & restart** |
+| Skipping Windows restart when installer requested it | Docker fails to start or WSL option missing                  | Restart Windows, then launch Docker Desktop again                                |
+
+Docker Desktop will run containers using the WSL2 backend, which provides better performance and resource usage than the legacy Hyper-V backend.

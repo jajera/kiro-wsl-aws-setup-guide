@@ -1,0 +1,12 @@
+---
+title: 'Troubleshooting'
+---
+
+| Symptom                                                         | Cause                                                                                    | Fix                                                                                                                                         |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docker: command not found` in WSL                              | Docker Desktop WSL integration not enabled or terminal opened before integration applied | Enable your distro in Docker Desktop → Settings → Resources → WSL Integration → Apply & restart. Open a fresh Ubuntu terminal.              |
+| `ssh -T git@github.com` returns "Permission denied (publickey)" | SSH key not added to GitHub or ssh-agent not running                                     | Verify key exists: `ls ~/.ssh/id_ed25519.pub`. Add to GitHub if missing. Start agent: `eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519` |
+| `aws sso login` returns "Error when retrieving token"           | SSO session expired or profile misconfigured                                             | Re-run `aws configure sso` to reconfigure the profile. Verify `~/.aws/config` has correct `sso_start_url` and `sso_region`.                 |
+| Kiro cannot connect to WSL                                      | WSL not running or Remote-WSL extension missing                                          | Run `wsl --list --verbose` in PowerShell to confirm the distro is running. Install the WSL extension in Kiro if missing.                    |
+| Workspace trust dialog does not appear                          | Folder already trusted or workspace settings cached                                      | Check **File → Preferences → Settings** → search "trust" to review workspace trust configuration.                                           |
+| `aws sts get-caller-identity` returns "ExpiredToken"            | SSO session timed out                                                                    | Run `aws sso login --profile <your-profile-name>` again to refresh the session.                                                             |

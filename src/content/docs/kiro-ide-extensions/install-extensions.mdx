@@ -1,0 +1,27 @@
+---
+title: 'Install Extensions in Kiro IDE'
+---
+
+Kiro has a CLI similar to VS Code: the `kiro` command (not `kiro-cli`, which is a separate terminal AI tool).
+
+## Install Extensions via PowerShell
+
+```powershell
+kiro --install-extension jeanp413.open-remote-wsl
+kiro --install-extension amazonwebservices.aws-toolkit-vscode
+kiro --install-extension hashicorp.terraform
+kiro --install-extension GitHub.vscode-pull-request-github
+kiro --install-extension ms-azuretools.vscode-docker
+```
+
+**Or via Kiro GUI:** `Ctrl+Shift+X` → install **Open Remote - WSL**, **AWS Toolkit**, **HashiCorp Terraform**, **GitHub Pull Requests**, **Docker** → `Ctrl+Shift+P` → **Developer: Reload Window**
+
+| Extension            | ID                                     | Why you need it                                                     |
+| -------------------- | -------------------------------------- | ------------------------------------------------------------------- |
+| Open Remote - WSL    | `jeanp413.open-remote-wsl`             | Connect Kiro to WSL and open your workspace on the Linux filesystem |
+| AWS Toolkit          | `amazonwebservices.aws-toolkit-vscode` | AWS resources and profiles in the IDE sidebar                       |
+| HashiCorp Terraform  | `hashicorp.terraform`                  | HCL syntax, formatting, and language-server support for `.tf` files |
+| GitHub Pull Requests | `GitHub.vscode-pull-request-github`    | Browse PRs and issues, sign in to GitHub from the IDE               |
+| Docker               | `ms-azuretools.vscode-docker`          | View containers and images from the IDE                             |
+
+Installing **Open Remote - WSL** alone is **not** enough — continue to the next step to configure `argv.json`.

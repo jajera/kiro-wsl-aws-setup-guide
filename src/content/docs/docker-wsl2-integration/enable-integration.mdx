@@ -1,0 +1,28 @@
+---
+title: 'Enable WSL Integration'
+---
+
+## Enable WSL Integration in Docker Desktop
+
+1. **Docker Desktop** → **Settings** → **Resources** → **WSL integration**
+2. Check **Enable integration with my default WSL distro**
+3. Under **Enable integration with additional distros:** turn **ON** **Ubuntu-26.04** (your distro name)
+4. Click **Apply & restart** (bottom-right) → wait for whale icon to steady (~30–60 seconds)
+
+> **Important:** Step 3 is what actually enables Docker in your Ubuntu distro. The "default WSL distro" checkbox (step 2) only applies to whichever distro `wsl --list` marks with `*` — which may be `docker-desktop`, not Ubuntu. Enabling your specific distro by name in step 3 ensures Docker works regardless of which distro is set as default.
+>
+> **Optional:** If you want Ubuntu to be your default distro (so `wsl` opens Ubuntu instead of docker-desktop), run in PowerShell:
+>
+> ```powershell
+> wsl --set-default Ubuntu-26.04
+> ```
+
+**Expected before you click Apply & restart** — both enabled:
+
+![Docker Desktop WSL integration settings showing default WSL distro checked and Ubuntu-26.04 enabled](/kiro-wsl-aws-setup-guide/images/docker-desktop-wsl-integration-enabled.png)
+
+**Distro not listed?** Click **Refetch distros**, or open Ubuntu once → PowerShell: `wsl --list --verbose` → restart Docker Desktop.
+
+## Fresh WSL2 Terminal
+
+Close all Ubuntu windows. Open a new one (Start menu → **Ubuntu**). Integration applies to new sessions only.

@@ -1,0 +1,72 @@
+---
+title: 'Enable Hardware Virtualization in BIOS/UEFI'
+---
+
+WSL2 and Docker Desktop both require **hardware virtualization** at the firmware level. If it is disabled, Docker Desktop shows **Virtualization support not detected** and the engine never starts. Enable it **before** continuing with the next steps.
+
+## Check Whether Virtualization Is Already Enabled (Windows)
+
+**Option A — Task Manager (easiest):**
+
+1. Press **Ctrl+Shift+Esc** to open **Task Manager**
+2. Open the **Performance** tab → click **CPU**
+3. At the bottom-right, look for **Virtualization:**
+
+   - **Enabled** — you are good; skip to the next page (Enable WSL2)
+   - **Disabled** — continue below to enable it in BIOS/UEFI
+
+**Option B — PowerShell:**
+
+```powershell
+systeminfo | findstr /i "Virtualization"
+```
+
+**Expected:**
+
+```text
+Virtualization Enabled In Firmware: Yes
+```
+
+If the line shows **No**, enable virtualization in BIOS/UEFI (steps below).
+
+## Enter BIOS/UEFI Setup
+
+BIOS menus differ by manufacturer and model. Use the steps that match your PC; the goal is the same on all systems: turn **on** Intel VT-x or AMD-V.
+
+1. **Save your work** and close open applications
+2. **Restart** the PC
+3. **Immediately** press the setup key shown on the boot splash screen (often only shown for 1–2 seconds). Common keys:
+
+   | Manufacturer / type        | Typical setup key                                                    |
+   | -------------------------- | -------------------------------------------------------------------- |
+   | Dell                       | **F2** or **F12**                                                    |
+   | HP                         | **F10** or **Esc** then **F10**                                      |
+   | Lenovo (ThinkPad, IdeaPad) | **F1** or **F2**                                                     |
+   | ASUS                       | **F2** or **Del**                                                    |
+   | Acer                       | **F2** or **Del**                                                    |
+   | MSI                        | **Del**                                                              |
+   | Microsoft Surface          | Hold **Volume Up** while pressing the power button                   |
+   | Generic / unknown          | **Del**, **F2**, **F10**, or **F12** — try the key printed on screen |
+
+4. If Windows starts normally, restart again and press the key earlier and repeatedly until the firmware menu appears
+
+**Windows 11 shortcut (may not work on all PCs):** **Settings** → **System** → **Recovery** → **Advanced startup** → **Restart now** → **Troubleshoot** → **Advanced options** → **UEFI Firmware Settings** → **Restart**
+
+## Find and Enable the Virtualization Setting
+
+Look in menus such as **Advanced**, **CPU Configuration**, **Security**, **System Configuration**, or **Chipset**. Setting names vary:
+
+| CPU       | Common setting names                                                         |
+| --------- | ---------------------------------------------------------------------------- |
+| **Intel** | Intel Virtualization Technology, Intel VT-x, Virtualization Technology (VTx) |
+| **AMD**   | AMD-V, SVM Mode, Secure Virtual Machine                                      |
+
+1. Set the virtualization option to **Enabled**
+2. **Save and exit** — usually **F10** → **Yes**, or **Save Changes and Reset**
+3. Let Windows boot normally
+
+> **Optional related settings:** Some firmware also lists **VT-d** (Intel) or **AMD IOMMU** — not required for this guide, but safe to enable if present. On a few laptops, a **Secure Boot** or corporate **MDM** policy can block virtualization; if the setting is missing or greyed out, check with your IT team.
+
+## Verify After Reboot
+
+Repeat the Task Manager check (**Performance** → **CPU** → **Virtualization: Enabled**) or run `systeminfo` again. Only continue to the next step when firmware virtualization is **Enabled**.

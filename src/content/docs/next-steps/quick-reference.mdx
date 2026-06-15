@@ -1,0 +1,84 @@
+---
+title: 'Quick Reference'
+---
+
+## WSL Commands (PowerShell)
+
+| Command                | Purpose                                       |
+| ---------------------- | --------------------------------------------- |
+| `wsl --list --verbose` | List installed distros with version and state |
+| `wsl --shutdown`       | Stop all running WSL instances                |
+| `wsl --status`         | Show WSL configuration status                 |
+| `wsl -d Ubuntu-26.04`  | Start a specific distribution                 |
+| `wsl --update`         | Update WSL to the latest version              |
+
+## Docker Commands (WSL2 bash)
+
+| Command                   | Purpose                                        |
+| ------------------------- | ---------------------------------------------- |
+| `docker ps`               | List running containers                        |
+| `docker ps -a`            | List all containers including stopped          |
+| `docker images`           | List downloaded images                         |
+| `docker run --rm <image>` | Run a container and remove it on exit          |
+| `docker compose up -d`    | Start services defined in `docker-compose.yml` |
+| `docker compose down`     | Stop and remove compose services               |
+| `docker system prune -f`  | Remove unused containers, networks, and images |
+
+## AWS SSO Commands (WSL2 bash)
+
+| Command                                           | Purpose                               |
+| ------------------------------------------------- | ------------------------------------- |
+| `aws sso login --profile <profile>`               | Authenticate with AWS SSO             |
+| `aws sts get-caller-identity --profile <profile>` | Verify current authenticated identity |
+| `aws sso logout`                                  | Clear all cached SSO tokens           |
+| `aws configure list-profiles`                     | List all configured AWS profiles      |
+| `cat ~/.aws/config`                               | View AWS CLI profile configuration    |
+
+## Git Commands (WSL2 bash)
+
+| Command                                     | Purpose                                |
+| ------------------------------------------- | -------------------------------------- |
+| `git config --global user.name`             | Show configured Git username           |
+| `git config --global user.email`            | Show configured Git email              |
+| `ssh -T git@github.com`                     | Test GitHub SSH authentication         |
+| `git clone git@github.com:<org>/<repo>.git` | Clone a repository via SSH             |
+| `git status`                                | Show working tree status               |
+| `git log --oneline -10`                     | Show last 10 commits in compact format |
+
+## Kiro Workspace Commands
+
+| Action                   | How                                                   |
+| ------------------------ | ----------------------------------------------------- |
+| Open WSL folder in Kiro  | Command Palette → **Remote-WSL: Open Folder in WSL**  |
+| Create a new spec        | Command Palette → **Kiro: Create Spec**               |
+| View steering files      | Open `.kiro/steering/` directory in the file explorer |
+| Check MCP configuration  | Open `.kiro/settings/mcp.json`                        |
+| Open integrated terminal | `` Ctrl+` `` or **Terminal → New Terminal**           |
+
+## Key File Locations
+
+| Path                      | Purpose                                |
+| ------------------------- | -------------------------------------- |
+| `~/.aws/config`           | AWS CLI profiles and SSO configuration |
+| `~/.ssh/config`           | SSH client configuration               |
+| `~/.ssh/id_ed25519.pub`   | SSH public key (for GitHub)            |
+| `~/.gitconfig`            | Global Git configuration               |
+| `~/workspace/`            | Recommended project workspace root     |
+| `.kiro/steering/`         | Project-level Kiro steering files      |
+| `.kiro/settings/mcp.json` | Project-level MCP server configuration |
+
+## Environment Variables
+
+```bash
+# Commonly set in ~/.bashrc or ~/.profile
+export AWS_PROFILE="your-profile-name"
+export AWS_REGION="us-east-1"
+```
+
+## Tips
+
+- Always open WSL folders via Kiro's Remote-WSL connection for full Linux toolchain access
+- Run `aws sso login` at the start of each work session — SSO tokens expire after several hours
+- Use `docker system prune` periodically to reclaim disk space from unused containers and images
+- If Docker stops responding in WSL, restart Docker Desktop from the Windows system tray
+- Keep your WSL2 distribution updated separately from Windows updates
