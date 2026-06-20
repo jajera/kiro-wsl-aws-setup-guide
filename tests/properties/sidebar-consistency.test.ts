@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import * as fc from 'fast-check';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
+import { describe, it, expect } from "vitest";
+import * as fc from "fast-check";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 /**
  * Feature: kiro-wsl-aws-setup-guide, Property 4: Sidebar-to-file consistency
@@ -13,12 +13,12 @@ import * as path from 'node:path';
  * Validates: Requirements 4.4, 8.3
  */
 
-const projectRoot = path.resolve(import.meta.dirname, '..', '..');
-const configPath = path.join(projectRoot, 'astro.config.mjs');
-const docsDir = path.join(projectRoot, 'src', 'content', 'docs');
+const projectRoot = path.resolve(import.meta.dirname, "..", "..");
+const configPath = path.join(projectRoot, "astro.config.mjs");
+const docsDir = path.join(projectRoot, "src", "content", "docs");
 
 function extractSlugsFromConfig(): string[] {
-  const configContent = fs.readFileSync(configPath, 'utf-8');
+  const configContent = fs.readFileSync(configPath, "utf-8");
   const slugRegex = /\{\s*slug:\s*['"]([^'"]+)['"]\s*\}/g;
   const slugs: string[] = [];
   let match: RegExpExecArray | null;
@@ -30,14 +30,14 @@ function extractSlugsFromConfig(): string[] {
   return slugs;
 }
 
-describe('Feature: kiro-wsl-aws-setup-guide, Property 4: Sidebar-to-file consistency', () => {
+describe("Feature: kiro-wsl-aws-setup-guide, Property 4: Sidebar-to-file consistency", () => {
   const slugs = extractSlugsFromConfig();
 
-  it('should have at least one slug in the sidebar config', () => {
+  it("should have at least one slug in the sidebar config", () => {
     expect(slugs.length).toBeGreaterThan(0);
   });
 
-  it('every sidebar slug has a corresponding MDX file', () => {
+  it("every sidebar slug has a corresponding MDX file", () => {
     /**
      * Validates: Requirements 4.4, 8.3
      */

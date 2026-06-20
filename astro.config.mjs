@@ -1,133 +1,133 @@
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
-import starlightThemeVintage from 'starlight-theme-vintage';
+import { defineConfig } from "astro/config";
+import starlight from "@astrojs/starlight";
+import starlightThemeVintage from "starlight-theme-vintage";
 
 export default defineConfig({
-  site: 'https://jajera.github.io',
-  base: '/kiro-wsl-aws-setup-guide',
+  site: "https://jajera.github.io",
+  base: "/kiro-wsl-aws-setup-guide",
   integrations: [
     starlight({
-      title: 'Kiro WSL AWS Setup Guide',
-      favicon: '/favicon.svg',
-      routeMiddleware: './src/routeData.ts',
+      title: "Kiro WSL AWS Setup Guide",
+      favicon: "/favicon.svg",
+      routeMiddleware: "./src/routeData.ts",
       description:
-        'Step-by-step guide for setting up a WSL2 + Docker Desktop + Kiro IDE + AWS SSO development environment on Windows.',
+        "Step-by-step guide for setting up a WSL2 + Docker Desktop + Kiro IDE + AWS SSO development environment on Windows.",
       plugins: [starlightThemeVintage()],
-      customCss: ['./src/styles/splash-overrides.css'],
+      customCss: ["./src/styles/splash-overrides.css"],
       social: [
         {
-          icon: 'github',
-          label: 'GitHub',
-          href: 'https://github.com/jajera/kiro-wsl-aws-setup-guide',
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/jajera/kiro-wsl-aws-setup-guide",
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/jajera/kiro-wsl-aws-setup-guide/edit/main/',
+        baseUrl: "https://github.com/jajera/kiro-wsl-aws-setup-guide/edit/main/",
       },
       lastUpdated: true,
       pagination: true,
       sidebar: [
-        { label: 'Introduction', link: '/' },
+        { label: "Introduction", link: "/" },
         {
-          label: 'Windows Host Prerequisites',
+          label: "Windows Host Prerequisites",
           collapsed: false,
           items: [
-            { slug: 'windows-host-prerequisites/bios-virtualization' },
-            { slug: 'windows-host-prerequisites/enable-wsl2' },
-            { slug: 'windows-host-prerequisites/restart-and-configure' },
+            { slug: "windows-host-prerequisites/bios-virtualization" },
+            { slug: "windows-host-prerequisites/enable-wsl2" },
+            { slug: "windows-host-prerequisites/restart-and-configure" },
           ],
         },
         {
-          label: 'Docker Desktop',
+          label: "Docker Desktop",
           collapsed: false,
           items: [
-            { slug: 'docker-desktop/download' },
-            { slug: 'docker-desktop/install' },
-            { slug: 'docker-desktop/first-launch' },
-            { slug: 'docker-desktop/verify' },
+            { slug: "docker-desktop/download" },
+            { slug: "docker-desktop/install" },
+            { slug: "docker-desktop/first-launch" },
+            { slug: "docker-desktop/verify" },
           ],
         },
         {
-          label: 'WSL2 Linux Distribution',
+          label: "WSL2 Linux Distribution",
           collapsed: false,
           items: [
-            { slug: 'wsl2-linux-distribution/install-ubuntu' },
-            { slug: 'wsl2-linux-distribution/user-creation' },
-            { slug: 'wsl2-linux-distribution/packages' },
+            { slug: "wsl2-linux-distribution/install-ubuntu" },
+            { slug: "wsl2-linux-distribution/user-creation" },
+            { slug: "wsl2-linux-distribution/packages" },
           ],
         },
         {
-          label: 'Docker WSL2 Integration',
+          label: "Docker WSL2 Integration",
           collapsed: false,
           items: [
-            { slug: 'docker-wsl2-integration/enable-integration' },
-            { slug: 'docker-wsl2-integration/verify' },
+            { slug: "docker-wsl2-integration/enable-integration" },
+            { slug: "docker-wsl2-integration/verify" },
           ],
         },
         {
-          label: 'Kiro IDE Installation',
+          label: "Kiro IDE Installation",
           collapsed: false,
           items: [
-            { slug: 'kiro-ide-installation/download-and-install' },
-            { slug: 'kiro-ide-installation/first-launch' },
+            { slug: "kiro-ide-installation/download-and-install" },
+            { slug: "kiro-ide-installation/first-launch" },
           ],
         },
         {
-          label: 'Kiro IDE Extensions',
+          label: "Kiro IDE Extensions",
           collapsed: false,
           items: [
-            { slug: 'kiro-ide-extensions/install-extensions' },
-            { slug: 'kiro-ide-extensions/configure-argv' },
+            { slug: "kiro-ide-extensions/install-extensions" },
+            { slug: "kiro-ide-extensions/configure-argv" },
           ],
         },
         {
-          label: 'Connect Kiro to WSL',
+          label: "Connect Kiro to WSL",
           collapsed: false,
           items: [
-            { slug: 'connect-kiro-to-wsl/wsl-targets' },
-            { slug: 'connect-kiro-to-wsl/trust-workspace' },
-            { slug: 'connect-kiro-to-wsl/re-sign-in' },
+            { slug: "connect-kiro-to-wsl/wsl-targets" },
+            { slug: "connect-kiro-to-wsl/trust-workspace" },
+            { slug: "connect-kiro-to-wsl/re-sign-in" },
           ],
         },
         {
-          label: 'GitHub Setup',
+          label: "GitHub Setup",
           collapsed: false,
           items: [
-            { slug: 'github-setup/git-config' },
-            { slug: 'github-setup/ssh-key' },
-            { slug: 'github-setup/add-key-to-github' },
+            { slug: "github-setup/git-config" },
+            { slug: "github-setup/ssh-key" },
+            { slug: "github-setup/add-key-to-github" },
           ],
         },
         {
-          label: 'AWS Setup',
+          label: "AWS Setup",
           collapsed: false,
           items: [
-            { slug: 'aws-setup/install-cli' },
-            { slug: 'aws-setup/configure-sso' },
-            { slug: 'aws-setup/login-and-verify' },
+            { slug: "aws-setup/install-cli" },
+            { slug: "aws-setup/configure-sso" },
+            { slug: "aws-setup/login-and-verify" },
           ],
         },
         {
-          label: 'Kiro Workspace Configuration',
+          label: "Kiro Workspace Configuration",
           collapsed: false,
           items: [
-            { slug: 'kiro-workspace-configuration/steering-files' },
-            { slug: 'kiro-workspace-configuration/mcp-servers' },
-            { slug: 'kiro-workspace-configuration/workspace-settings' },
+            { slug: "kiro-workspace-configuration/steering-files" },
+            { slug: "kiro-workspace-configuration/mcp-servers" },
+            { slug: "kiro-workspace-configuration/workspace-settings" },
           ],
         },
         {
-          label: 'Final Verification',
+          label: "Final Verification",
           collapsed: false,
           items: [
-            { slug: 'final-verification/checklist' },
-            { slug: 'final-verification/troubleshooting' },
+            { slug: "final-verification/checklist" },
+            { slug: "final-verification/troubleshooting" },
           ],
         },
         {
-          label: 'Next Steps',
+          label: "Next Steps",
           collapsed: false,
-          items: [{ slug: 'next-steps/what-to-do-next' }, { slug: 'next-steps/quick-reference' }],
+          items: [{ slug: "next-steps/what-to-do-next" }, { slug: "next-steps/quick-reference" }],
         },
       ],
     }),

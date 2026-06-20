@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
-import * as fc from 'fast-check';
-import * as fs from 'fs';
-import * as path from 'path';
+import { describe, it, expect } from "vitest";
+import * as fc from "fast-check";
+import * as fs from "fs";
+import * as path from "path";
 
-const CONTENT_DIR = path.resolve(__dirname, '../../src/content/docs');
-const PUBLIC_DIR = path.resolve(__dirname, '../../public');
-const BASE_PREFIX = '/kiro-wsl-aws-setup-guide/';
+const CONTENT_DIR = path.resolve(__dirname, "../../src/content/docs");
+const PUBLIC_DIR = path.resolve(__dirname, "../../public");
+const BASE_PREFIX = "/kiro-wsl-aws-setup-guide/";
 
 interface ImageReference {
   altText: string;
@@ -21,7 +21,7 @@ function getMdxFiles(dir: string): string[] {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...getMdxFiles(fullPath));
-    } else if (entry.isFile() && entry.name.endsWith('.mdx')) {
+    } else if (entry.isFile() && entry.name.endsWith(".mdx")) {
       files.push(fullPath);
     }
   }
@@ -36,7 +36,7 @@ function collectImageReferences(): ImageReference[] {
   const references: ImageReference[] = [];
 
   for (const file of mdxFiles) {
-    const content = fs.readFileSync(file, 'utf-8');
+    const content = fs.readFileSync(file, "utf-8");
     let match: RegExpExecArray | null;
     while ((match = imageRegex.exec(content)) !== null) {
       references.push({
@@ -50,10 +50,10 @@ function collectImageReferences(): ImageReference[] {
   return references;
 }
 
-describe('Feature: kiro-wsl-aws-setup-guide, Property 2: Image reference resolution', () => {
+describe("Feature: kiro-wsl-aws-setup-guide, Property 2: Image reference resolution", () => {
   const references = collectImageReferences();
 
-  it('all image paths resolve to existing files in public/ after removing base prefix', () => {
+  it("all image paths resolve to existing files in public/ after removing base prefix", () => {
     /**
      * Validates: Requirements 3.2, 8.2
      *
@@ -80,17 +80,17 @@ describe('Feature: kiro-wsl-aws-setup-guide, Property 2: Image reference resolut
   });
 });
 
-describe('Open Graph image asset', () => {
-  it('og-image.png exists in public/ for social preview cards', () => {
-    const ogPath = path.join(PUBLIC_DIR, 'og-image.png');
+describe("Open Graph image asset", () => {
+  it("og-image.png exists in public/ for social preview cards", () => {
+    const ogPath = path.join(PUBLIC_DIR, "og-image.png");
     expect(fs.existsSync(ogPath), `Expected OG image at ${ogPath}`).toBe(true);
   });
 });
 
-describe('Feature: kiro-wsl-aws-setup-guide, Property 3: Image alt text completeness', () => {
+describe("Feature: kiro-wsl-aws-setup-guide, Property 3: Image alt text completeness", () => {
   const references = collectImageReferences();
 
-  it('all image references have non-empty alt text with at least one word character', () => {
+  it("all image references have non-empty alt text with at least one word character", () => {
     /**
      * Validates: Requirements 3.4
      *

@@ -58,25 +58,25 @@ The central configuration that wires together the Starlight integration, sidebar
 
 ```javascript
 // astro.config.mjs
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import { defineConfig } from "astro/config";
+import starlight from "@astrojs/starlight";
 
 export default defineConfig({
-  site: 'https://jajera.github.io',
-  base: '/kiro-wsl-aws-setup-guide',
+  site: "https://jajera.github.io",
+  base: "/kiro-wsl-aws-setup-guide",
   integrations: [
     starlight({
-      title: 'Kiro WSL AWS Setup Guide',
+      title: "Kiro WSL AWS Setup Guide",
       sidebar: [
-        { label: 'Introduction', link: '/' },
-        { slug: 'windows-host-prerequisites' },
-        { slug: 'kiro-ide-extensions' },
-        { slug: 'wsl2-linux-distribution-setup' },
-        { slug: 'docker-desktop-wsl2-integration' },
-        { slug: 'workspace-setup' },
-        { slug: 'kiro-workspace-configuration' },
-        { slug: 'final-verification' },
-        { slug: 'next-steps-quick-reference' },
+        { label: "Introduction", link: "/" },
+        { slug: "windows-host-prerequisites" },
+        { slug: "kiro-ide-extensions" },
+        { slug: "wsl2-linux-distribution-setup" },
+        { slug: "docker-desktop-wsl2-integration" },
+        { slug: "workspace-setup" },
+        { slug: "kiro-workspace-configuration" },
+        { slug: "final-verification" },
+        { slug: "next-steps-quick-reference" },
       ],
     }),
   ],
@@ -141,7 +141,7 @@ Each MDX page must include YAML frontmatter conforming to Starlight's content sc
 
 ```yaml
 ---
-title: 'Page Title'
+title: "Page Title"
 ---
 ```
 

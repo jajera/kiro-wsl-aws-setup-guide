@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import * as fc from 'fast-check';
-import matter from 'gray-matter';
-import * as fs from 'fs';
-import * as path from 'path';
+import { describe, it, expect } from "vitest";
+import * as fc from "fast-check";
+import matter from "gray-matter";
+import * as fs from "fs";
+import * as path from "path";
 
 /**
  * Feature: kiro-wsl-aws-setup-guide, Property 1: Frontmatter validity
@@ -14,7 +14,7 @@ import * as path from 'path';
  * `title` field whose value is a non-empty string.
  */
 
-const CONTENT_DIR = path.resolve(__dirname, '../../src/content/docs');
+const CONTENT_DIR = path.resolve(__dirname, "../../src/content/docs");
 
 function getMdxFiles(dir: string): string[] {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -24,7 +24,7 @@ function getMdxFiles(dir: string): string[] {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...getMdxFiles(fullPath));
-    } else if (entry.isFile() && entry.name.endsWith('.mdx')) {
+    } else if (entry.isFile() && entry.name.endsWith(".mdx")) {
       files.push(fullPath);
     }
   }
@@ -32,21 +32,21 @@ function getMdxFiles(dir: string): string[] {
   return files;
 }
 
-describe('Feature: kiro-wsl-aws-setup-guide, Property 1: Frontmatter validity', () => {
+describe("Feature: kiro-wsl-aws-setup-guide, Property 1: Frontmatter validity", () => {
   const mdxFiles = getMdxFiles(CONTENT_DIR);
 
-  it('should find at least one MDX file to test', () => {
+  it("should find at least one MDX file to test", () => {
     expect(mdxFiles.length).toBeGreaterThan(0);
   });
 
-  it('all MDX files have valid frontmatter with a non-empty title', () => {
+  it("all MDX files have valid frontmatter with a non-empty title", () => {
     /**
      * Validates: Requirements 2.11, 8.1, 8.5
      */
     fc.assert(
       fc.property(fc.constantFrom(...mdxFiles), (filePath) => {
         const fileName = path.relative(CONTENT_DIR, filePath);
-        const content = fs.readFileSync(filePath, 'utf-8');
+        const content = fs.readFileSync(filePath, "utf-8");
 
         // Assert: frontmatter parses without error
         let parsed: matter.GrayMatterFile<string>;
@@ -58,13 +58,13 @@ describe('Feature: kiro-wsl-aws-setup-guide, Property 1: Frontmatter validity', 
         }
 
         // Assert: parsed object has a `title` key
-        if (!('title' in parsed.data)) {
+        if (!("title" in parsed.data)) {
           throw new Error(`Missing 'title' field in frontmatter of ${fileName}`);
         }
 
         // Assert: `title` value is a non-empty string
         const title = parsed.data.title;
-        if (typeof title !== 'string') {
+        if (typeof title !== "string") {
           throw new Error(`'title' field in ${fileName} is not a string (got ${typeof title})`);
         }
         if (title.trim().length === 0) {
