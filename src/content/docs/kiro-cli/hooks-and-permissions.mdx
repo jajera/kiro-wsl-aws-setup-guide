@@ -1,0 +1,215 @@
+---
+title: "Hooks and Permissions"
+---
+
+**Hooks** execute custom commands at specific points in the agent lifecycle and tool execution. For example, you can collect environment info when an agent starts, or inject formatting instructions on each prompt.
+
+Kiro CLI supports five hook types, each defined in the `hooks` section of the agent configuration file.
+
+## Hook Types
+
+| Hook               | Trigger point             | Use case                       |
+| ------------------ | ------------------------- | ------------------------------ |
+| `agentSpawn`       | Once at session start     | Collect environment info       |
+| `userPromptSubmit` | On each prompt submission | Change tone, add instructions  |
+| `preToolUse`       | Before tool execution     | Execution logging, blocking    |
+| `postToolUse`      | After tool execution      | Post-processing results        |
+| `stop`             | On response completion    | Post-processing, notifications |
+
+## Step 1: `agentSpawn` Hook
+
+Add the `hooks` section to the agent JSON (above `"model": null`):
+
+```bash
+vi ~/.kiro/agents/cloud-ops.json
+```
+
+```json
+"hooks": {
+  "agentSpawn": [
+    { "command": "aws sts get-caller-identity" }
+  ]
+}
+```
+
+Restart the agent:
+
+```bash
+kiro-cli chat --agent cloud-ops
+```
+
+After restarting, AWS account information is automatically included in context at session start. Verify:
+
+```text
+Tell me the current AWS account info
+```
+
+If the hook executed successfully, the AI should already know the account ID, ARN, and other information.
+
+## Step 2: `userPromptSubmit` Hook
+
+Create a structured response instruction file:
+
+```bash
+mkdir -p ~/kiro-cli-workshop
+cat << 'EOF' > ~/kiro-cli-workshop/structured-response.md
+Always respond in the following format:
+1. One-sentence summary
+2. Key details as bullet points
+3. Security considerations (if applicable)
+EOF
+```
+
+Add `userPromptSubmit` below `agentSpawn` in the agent JSON:
+
+```json
+"userPromptSubmit": [
+  { "command": "cat ~/kiro-cli-workshop/structured-response.md" }
+]
+```
+
+Test:
+
+```text
+What is Amazon VPC?
+```
+
+Verify the response follows the structured format (summary → bullet points → security considerations) instead of a free-form answer.
+
+## Step 3: Verify Hooks
+
+```text
+/hooks
+```
+
+## Step 4: `toolsSettings` — File Access Control
+
+`toolsSettings` provides fine-grained per-agent tool permission control. Add above `"model": null`:
+
+```json
+"toolsSettings": {
+  "fs_read": {
+    "allowedPaths": ["./**"],
+    "deniedPaths": ["/tmp/*", "~/.ssh/*"]
+  }
+}
+```
+
+Restart Kiro CLI and test:
+
+```bash
+echo "test" > ~/kiro-cli-workshop/test.txt
+echo "secret" > /tmp/secret.txt
+```
+
+```text
+Read test.txt file
+```
+
+→ Works normally.
+
+```text
+Read /tmp/secret.txt file
+```
+
+→ Blocked: `Command fs_read is rejected because it matches one or more rules on the denied list`
+
+## Step 5: `toolsSettings` — Dangerous Command Blocking
+
+Add shell command blocking inside `toolsSettings` (below `fs_read`):
+
+```json
+"shell": {
+  "deniedCommands": [
+    "rm -rf( .*)?",
+    "git push( .*)?",
+    "git reset --hard( .*)?"
+  ]
+}
+```
+
+`deniedCommands` uses regex patterns as a safety mechanism to prevent the AI from accidentally executing dangerous commands.
+
+Restart and test:
+
+```text
+What directory am I in?
+```
+
+```text
+Delete ~/mcp-prompts with rm -rf
+```
+
+The execution is blocked because it matches the `rm -rf` pattern.
+
+## Final Agent JSON
+
+This is the final form of the `cloud-ops` agent configured throughout the Kiro CLI section. The optional `MyPromptServer` from AWS MCP Integration Step 4 is excluded:
+
+```bash
+cat > ~/.kiro/agents/cloud-ops.json << 'EOF'
+{
+  "name": "cloud-ops",
+  "description": "AWS cloud operations dedicated agent",
+  "prompt": "You are an AWS cloud operations expert.",
+  "mcpServers": {
+    "awslabs.aws-documentation-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws"
+      }
+    }
+  },
+  "tools": ["*"],
+  "allowedTools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "use_aws",
+    "web_fetch",
+    "web_search",
+    "@awslabs.aws-documentation-mcp-server/read_documentation",
+    "@awslabs.aws-documentation-mcp-server/search_documentation",
+    "@awslabs.aws-documentation-mcp-server/recommend",
+    "@awslabs.aws-documentation-mcp-server/read_sections"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      { "command": "aws sts get-caller-identity" }
+    ],
+    "userPromptSubmit": [
+      { "command": "cat ~/kiro-cli-workshop/structured-response.md" }
+    ]
+  },
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["./**"],
+      "deniedPaths": ["/tmp/*", "~/.ssh/*"]
+    },
+    "shell": {
+      "deniedCommands": [
+        "rm -rf( .*)?",
+        "git push( .*)?",
+        "git reset --hard( .*)?"
+      ]
+    }
+  },
+  "resources": [],
+  "model": null
+}
+EOF
+```
+
+## Checkpoint
+
+You have completed this step if you have confirmed all of the following:
+
+1. Verified hook status with `/hooks`
+2. AWS account info available at session start via `agentSpawn`
+3. Structured response format applied via `userPromptSubmit`
+4. `/tmp/secret.txt` access blocked via `toolsSettings`
+5. `rm -rf` command blocked via `deniedCommands`
+
+For cloud operations labs using pre-built workshop infrastructure (VPCs, Transit Gateway, Steampipe), see [What to Do Next](../next-steps/what-to-do-next#cloud-operations-workshop).

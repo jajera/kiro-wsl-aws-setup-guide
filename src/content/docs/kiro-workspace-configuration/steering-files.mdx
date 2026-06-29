@@ -159,3 +159,32 @@ Kiro supports the [AGENTS.md](https://agents.md/) standard. Place an `AGENTS.md`
 - **Include examples** — Code snippets and before/after comparisons
 - **Never include secrets** — No API keys, passwords, or sensitive data
 - **Review regularly** — Update during sprint planning and architecture changes
+
+## Optional Exercise: Verify Steering Works
+
+Practice creating a steering file and confirming Kiro follows it:
+
+1. In your project, create a steering file with a visible rule:
+
+```bash
+mkdir -p .kiro/steering
+cat > .kiro/steering/exercise.md << 'EOF'
+---
+inclusion: always
+---
+
+# Exercise Rules
+
+- Always start responses with "Steering active:"
+- Use bullet points for lists
+- Keep answers under 5 sentences unless asked for detail
+EOF
+```
+
+2. Open the Kiro chat panel and ask a simple question (e.g., "What is Terraform?").
+
+3. Confirm the response follows your rules (starts with "Steering active:", uses bullets, stays concise).
+
+4. Modify the steering file — change the prefix to something else — and verify Kiro adapts on the next message.
+
+This exercise mirrors the workshop's vibe-coding approach: define project rules once, then let Kiro apply them consistently across conversations.

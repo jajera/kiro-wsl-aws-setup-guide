@@ -1,0 +1,156 @@
+---
+title: "MCP Overview"
+---
+
+**Model Context Protocol (MCP)** connects AI applications to external tools and data sources in a standardized way.
+
+Analogy: Just as USB-C connects chargers, monitors, and external drives through a single port, MCP connects AI to AWS documentation, databases, monitoring tools, and more through a single standard interface.
+
+## Without MCP: Fragmented Integration
+
+Without MCP, M AI apps need to individually integrate with N tools, requiring **M×N** integrations. Each app builds custom connectors for every data source.
+
+## With MCP: Standardized Integration
+
+With MCP, each app and tool only needs to implement one standard protocol, reducing to **M+N** implementations instead of M×N custom integrations.
+
+Using the USB-C hub analogy: MCP servers connect various data sources like USB-C cables, and the MCP client acts as a hub providing a unified interface to the AI host.
+
+With MCP, the following tasks are possible:
+
+- Access specialized knowledge bases and documentation (e.g., AWS Documentation MCP server)
+- Integrate with external services and APIs (e.g., GitHub, Slack, databases)
+- Extend AI capabilities with domain-specific tools (e.g., CloudWatch metrics analysis)
+- Create custom tools for specific workflows (e.g., infrastructure diagnostics prompts)
+
+For more details, see the [Kiro CLI MCP documentation](https://kiro.dev/docs/cli/mcp).
+
+## Architecture
+
+| Component        | Description                                                             | In this guide                      |
+| ---------------- | ----------------------------------------------------------------------- | ---------------------------------- |
+| **MCP Host**     | AI application that accesses data through MCP                           | Kiro CLI                           |
+| **MCP Client**   | Protocol client within the Host, maintaining 1:1 connection with server | Built into Kiro CLI                |
+| **MCP Server**   | Lightweight program exposing tools and data via standard MCP protocol   | AWS Documentation, etc.            |
+| **Data Sources** | Local (files, DB) and remote (API) data accessed by MCP Server          | AWS docs, CloudWatch metrics, etc. |
+
+### Kiro CLI's role
+
+Kiro CLI acts as both a client and orchestrator in the MCP ecosystem:
+
+- **MCP Server management** — Reads server definitions from configuration (`mcp.json` or agent JSON) to start and manage servers
+- **Communication mediation** — Mediates communication between the LLM and MCP Server
+- **Tool provision** — Validates and delivers tools exposed by MCP Servers for the LLM to use
+
+### Configuration methods
+
+| Method              | Description                                                                         |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| Command line        | `kiro-cli mcp add`                                                                  |
+| Configuration file  | Workspace `<project>/.kiro/settings/mcp.json` or global `~/.kiro/settings/mcp.json` |
+| Agent configuration | Per-agent `mcpServers` field in `~/.kiro/agents/{name}.json`                        |
+
+### IDE vs CLI MCP configuration
+
+| Surface         | Config location                       | Verify with              |
+| --------------- | ------------------------------------- | ------------------------ |
+| Kiro IDE        | `.kiro/settings/mcp.json` (workspace) | Kiro panel server status |
+| Kiro CLI global | `~/.kiro/settings/mcp.json`           | `/mcp` in CLI session    |
+| Kiro CLI agent  | `mcpServers` in agent JSON            | `/mcp` in CLI session    |
+
+For IDE workspace MCP setup, see [MCP Servers](../kiro-workspace-configuration/mcp-servers).
+
+## Request Flow
+
+1. User → asks Kiro CLI a question
+2. Kiro CLI → sends question + list of available MCP tools to LLM
+3. LLM → decides which MCP Tool to call
+4. MCP Client → requests tool execution from MCP Server
+5. MCP Server → retrieves results from data source
+6. Results returned → LLM generates final response → User
+
+## Three Core MCP Server Capabilities
+
+| Capability    | Description                             | Controlled by               | Example                   |
+| ------------- | --------------------------------------- | --------------------------- | ------------------------- |
+| **Resources** | Server exposes data (files, DB records) | Client decides when to use  | AWS documentation content |
+| **Prompts**   | Reusable prompt templates and workflows | User selects and runs       | `@cloud_diagnosis`        |
+| **Tools**     | LLM performs actions through the server | Model decides automatically | `search_documentation`    |
+
+This guide primarily uses **Tools** and **Prompts**. In [AWS MCP Integration](./aws-mcp-integration), you will practice AWS Documentation MCP tools and an optional custom MCP Prompt server.
+
+## Security Model
+
+| Principle               | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| **Explicit Permission** | User approval required before tool execution |
+| **Local Execution**     | MCP servers run locally                      |
+| **Isolation**           | Each MCP server runs as a separate process   |
+| **Transparency**        | Users can check available tools              |
+
+## `mcp.json` Configuration
+
+| Scope     | Path                                |
+| --------- | ----------------------------------- |
+| Global    | `~/.kiro/settings/mcp.json`         |
+| Workspace | `<project>/.kiro/settings/mcp.json` |
+
+## MCP Server Transport Types
+
+**Local server (stdio-based):** Runs as a local process and communicates via standard I/O (stdin/stdout). Each agent spawns its own MCP server subprocess. This is the method used in this guide.
+
+**HTTP server (streamable HTTP):** Connects to a remote endpoint over the network. Multiple clients can share one remote server. Supports GET, POST, and Server-Sent Events (SSE).
+
+```json
+{
+  "mcpServers": {
+    "my-server": {
+      "command": "uvx",
+      "args": ["my-mcp-server@latest"],
+      "env": { "API_KEY": "your-key" }
+    }
+  }
+}
+```
+
+Remote HTTP servers support OAuth authentication:
+
+```json
+{
+  "mcpServers": {
+    "remote-server": {
+      "url": "https://endpoint.example.com",
+      "type": "http",
+      "headers": { "Authorization": "Bearer token" }
+    }
+  }
+}
+```
+
+## Lab: Check MCP Status
+
+Inside a Kiro CLI session:
+
+```text
+/mcp
+```
+
+Expected output if no servers are configured yet:
+
+```text
+⚠ No MCP servers installed
+
+To learn how to configure MCP servers, visit https://kiro.dev/docs/cli/mcp
+```
+
+Since no MCP servers have been configured yet, this message is normal. In the next step you will add the AWS Documentation MCP server to your `cloud-ops` agent.
+
+## Checkpoint
+
+You have completed this step if you have confirmed all of the following:
+
+1. Understanding of MCP's 3-tier Host-Client-Server structure
+2. Understanding of local vs remote MCP Server configuration methods
+3. Current MCP server status confirmed with `/mcp` command
+
+Next: [AWS MCP Integration](./aws-mcp-integration) — add the AWS Documentation MCP server to your `cloud-ops` agent.

@@ -108,6 +108,16 @@ export default defineConfig({
           ],
         },
         {
+          label: "Kiro CLI",
+          collapsed: false,
+          items: [
+            { slug: "kiro-cli/custom-agents" },
+            { slug: "kiro-cli/mcp-overview" },
+            { slug: "kiro-cli/aws-mcp-integration" },
+            { slug: "kiro-cli/hooks-and-permissions" },
+          ],
+        },
+        {
           label: "Kiro Workspace Configuration",
           collapsed: false,
           items: [
@@ -127,7 +137,11 @@ export default defineConfig({
         {
           label: "Next Steps",
           collapsed: false,
-          items: [{ slug: "next-steps/what-to-do-next" }, { slug: "next-steps/quick-reference" }],
+          items: [
+            { slug: "next-steps/what-to-do-next" },
+            { slug: "next-steps/spec-hands-on" },
+            { slug: "next-steps/quick-reference" },
+          ],
         },
       ],
     }),

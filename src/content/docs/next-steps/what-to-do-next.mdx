@@ -18,20 +18,56 @@ git init
 
 ## Explore Kiro Features
 
-- **Specs:** Define feature requirements, designs, and implementation tasks using structured specifications
+- **Kiro CLI:** Custom agents, MCP integration, and hooks in the terminal — see [Custom Agents](../kiro-cli/custom-agents)
+- **Specs:** Define feature requirements, designs, and implementation tasks using structured specifications — see [Spec Hands-on](./spec-hands-on)
 - **Steering files:** Customize agent behavior with project-level steering in `.kiro/steering/`
 - **MCP servers:** Extend Kiro's capabilities with Model Context Protocol integrations configured in `.kiro/settings/mcp.json`
-- **Hooks:** Automate repetitive workflows with event-driven hooks
+- **Hooks:** Automate repetitive workflows with event-driven hooks (IDE) or agent lifecycle hooks (CLI)
+
+## Cloud Operations Workshop
+
+The [Kiro CLI AIOps Workshop](https://catalog.us-east-1.prod.workshops.aws/) includes advanced cloud operations labs (EC2 diagnostics, network analysis, CloudWatch monitoring) that use **pre-deployed workshop infrastructure** — three VPCs, Transit Gateway, Steampipe, and additional MCP servers (`aws-mcp`, CloudWatch MCP).
+
+These labs require an AWS Builder Center event account with the workshop environment provisioned. They are not part of this self-setup guide, but pair well after completing the [Kiro CLI](../kiro-cli/custom-agents) section if you attend the workshop.
 
 ## Learn Spec-Driven Development
 
-Kiro specs follow a structured workflow:
+Kiro specs follow a structured workflow instead of ad-hoc "vibe coding" prompts:
 
-1. **Requirements** — Define what the feature should do with acceptance criteria
-2. **Design** — Describe the architecture and correctness properties
-3. **Tasks** — Break implementation into trackable steps
+| Document     | Filename          | Role                                              |
+| ------------ | ----------------- | ------------------------------------------------- |
+| Requirements | `requirements.md` | What to build (user stories, acceptance criteria) |
+| Design       | `design.md`       | How to build it (architecture, components, flow)  |
+| Tasks        | `tasks.md`        | In what order (checklist-style implementation)    |
 
-Start by creating a spec for a small feature to get familiar with the workflow.
+All files live in `.kiro/specs/{feature-name}/`.
+
+### Vibe coding vs spec-driven development
+
+**Vibe coding** is throwing prompts based on feeling to generate code. It is fast for simple prototypes, but real projects run into problems:
+
+| Problem                  | Example                                             |
+| ------------------------ | --------------------------------------------------- |
+| Loss of direction        | "Why is what I made now different from before?"     |
+| Repetitive work          | Requesting the same modifications multiple times    |
+| Lack of consistency      | Different styles and structures across files        |
+| No verification          | No criteria to judge "is this correct?"             |
+| Collaboration difficulty | Hard for teammates to understand intent or progress |
+
+**Spec-driven development** addresses these by documenting requirements, design, and tasks before implementation. Use specs when:
+
+- The feature has multiple user stories or acceptance criteria
+- You need consistent architecture across files
+- Multiple people will review or continue the work
+- You want a checklist to track progress
+
+Use vibe coding (with steering files) when:
+
+- Prototyping quickly in a single file
+- Exploring an idea before committing to a design
+- The scope is small and unlikely to grow
+
+Walk through a condensed example in [Spec Hands-on](./spec-hands-on).
 
 ## Keep Your Environment Updated
 

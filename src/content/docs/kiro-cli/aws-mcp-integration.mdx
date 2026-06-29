@@ -1,0 +1,173 @@
+---
+title: "AWS MCP Integration"
+---
+
+Add the **AWS Documentation MCP server** to your `cloud-ops` agent so Kiro CLI can search and read AWS documentation automatically.
+
+> **Prerequisite:** Complete [Custom Agents](./custom-agents) and [MCP Overview](./mcp-overview). The `uvx` command requires `uv` — see the prerequisite callout in [MCP Servers](../kiro-workspace-configuration/mcp-servers).
+
+## Step 1: Add AWS Documentation MCP Server
+
+Edit the agent JSON with `/agent edit` or your editor:
+
+```bash
+vi ~/.kiro/agents/cloud-ops.json
+```
+
+Parts to modify:
+
+1. Replace `"mcpServers": {}` with the MCP server block below
+2. Add four `@awslabs...` entries to the `allowedTools` array
+
+```json
+"mcpServers": {
+  "awslabs.aws-documentation-mcp-server": {
+    "command": "uvx",
+    "args": ["awslabs.aws-documentation-mcp-server@latest"],
+    "env": {
+      "FASTMCP_LOG_LEVEL": "ERROR",
+      "AWS_DOCUMENTATION_PARTITION": "aws"
+    }
+  }
+}
+```
+
+```json
+"allowedTools": [
+  "fs_read",
+  "fs_write",
+  "execute_bash",
+  "use_aws",
+  "web_fetch",
+  "web_search",
+  "@awslabs.aws-documentation-mcp-server/read_documentation",
+  "@awslabs.aws-documentation-mcp-server/search_documentation",
+  "@awslabs.aws-documentation-mcp-server/recommend",
+  "@awslabs.aws-documentation-mcp-server/read_sections"
+]
+```
+
+If editor-based editing is difficult, overwrite the entire file:
+
+```bash
+cat > ~/.kiro/agents/cloud-ops.json << 'EOF'
+{
+  "name": "cloud-ops",
+  "description": "AWS cloud operations dedicated agent",
+  "prompt": "You are an AWS cloud operations expert.",
+  "mcpServers": {
+    "awslabs.aws-documentation-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws"
+      }
+    }
+  },
+  "tools": ["*"],
+  "allowedTools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "use_aws",
+    "web_fetch",
+    "web_search",
+    "@awslabs.aws-documentation-mcp-server/read_documentation",
+    "@awslabs.aws-documentation-mcp-server/search_documentation",
+    "@awslabs.aws-documentation-mcp-server/recommend",
+    "@awslabs.aws-documentation-mcp-server/read_sections"
+  ],
+  "resources": [],
+  "hooks": {},
+  "model": null
+}
+EOF
+```
+
+Adding MCP tools to `allowedTools` allows documentation searches to run automatically without needing approval each time.
+
+Restart Kiro CLI:
+
+```bash
+kiro-cli chat --agent cloud-ops
+```
+
+## Step 2: Verify MCP Server
+
+Inside the session:
+
+```text
+/mcp
+```
+
+```text
+/tools
+```
+
+Confirm the AWS Documentation MCP server appears and its tools are listed.
+
+## Step 3: Test AWS Documentation Search
+
+```text
+Search the AWS documentation for scaling policies in Amazon EC2 Auto Scaling
+```
+
+Since the search tools are registered in `allowedTools`, they run immediately without an approval request.
+
+## Step 4: Custom MCP Prompt Server (Optional)
+
+This step is optional — it demonstrates MCP **Prompts**, not required for the rest of the guide.
+
+Create a project and write the MCP server code:
+
+```bash
+mkdir -p ~/mcp-prompts && cd ~/mcp-prompts
+uv init && uv add mcp "mcp[cli]"
+```
+
+```bash
+cat > ~/mcp-prompts/mcp-server.py << 'EOF'
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("MyPromptServer")
+
+@mcp.prompt()
+def cloud_diagnosis() -> str:
+    """Checklist prompt for AWS infrastructure diagnostics"""
+    return """Please diagnose the AWS infrastructure in the following order:
+1. Check EC2 instance status
+2. Review Security Group rules
+3. Verify VPC routing tables
+4. Check CloudWatch alarms
+"""
+EOF
+```
+
+Add `MyPromptServer` to the `mcpServers` section in `~/.kiro/agents/cloud-ops.json`:
+
+```json
+"MyPromptServer": {
+  "command": "uv",
+  "args": ["--directory", "$HOME/mcp-prompts", "run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+}
+```
+
+Restart the agent and list prompts:
+
+```text
+/prompts list
+```
+
+An `UnauthorizedOperation` error may occur when running `@cloud_diagnosis` without AWS permissions — that is expected. The prompt loading and execution attempt confirms successful MCP Prompt server configuration.
+
+## Checkpoint
+
+You have completed this step if you have confirmed all of the following:
+
+1. AWS Documentation MCP server loaded (confirmed with `/mcp`)
+2. Documentation search tools visible in `/tools`
+3. AWS documentation search runs without approval prompt
+4. (Optional) `@cloud_diagnosis` prompt loads from custom MCP Prompt server
+
+Next: [Hooks and Permissions](./hooks-and-permissions) — automate context injection and fine-grained tool control.

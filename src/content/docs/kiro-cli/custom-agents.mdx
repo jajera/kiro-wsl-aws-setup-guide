@@ -1,0 +1,155 @@
+---
+title: "Custom Agents"
+---
+
+Kiro CLI can be configured with **custom agents** — task-specific profiles defined by JSON. Each agent controls available tools, permissions, MCP servers, hooks, and the system prompt.
+
+> **Before you start**
+>
+> - **Kiro CLI** (`kiro-cli`) is a terminal AI tool — distinct from the `kiro` command used by Kiro IDE for extensions and remote sessions. See [Install Extensions](../kiro-ide-extensions/install-extensions).
+> - Install Kiro CLI in WSL if you have not already:
+>
+>   ```bash
+>   curl -fsSL https://cli.kiro.dev/install | bash
+>   kiro-cli --version
+>   ```
+>
+> - For interactive chat basics, see the [Kiro CLI documentation](https://kiro.dev/docs/cli).
+> - This lab assumes AWS CLI is configured from the [AWS Setup](../aws-setup/login-and-verify) section.
+
+## What is a Custom Agent?
+
+A custom agent configures how Kiro CLI behaves for specific tasks. Each agent is defined by a JSON configuration file and includes available tools, permissions, context, model, and more.
+
+If the default Kiro CLI is a **universal toolkit**, a custom agent is a **task-specific toolbox**. For example:
+
+- An **AWS operations agent** might include only AWS CLI and documentation search tools.
+- A **code review agent** might include only file reading and analysis tools.
+
+## Step 1: Check Current Agents
+
+Start Kiro CLI and list available agents:
+
+```bash
+kiro-cli
+```
+
+Inside the session:
+
+```text
+/agent list
+```
+
+## Step 2: Create a Custom Agent
+
+```text
+/agent create
+```
+
+Prompts for name and description appear in sequence:
+
+```text
+✔ Enter agent name: cloud-ops
+✔ Enter agent description: AWS cloud operations dedicated agent
+```
+
+The editor opens with pre-filled content. Modify as needed:
+
+```json
+{
+  "name": "cloud-ops",
+  "description": "AWS cloud operations dedicated agent",
+  "prompt": "You are a specialized AWS cloud operations agent. Your primary focus is on managing, monitoring, and optimizing AWS infrastructure and services.",
+  "mcpServers": {},
+  "tools": ["*"],
+  "allowedTools": ["fs_read", "fs_write", "execute_bash", "use_aws", "web_fetch", "web_search"],
+  "resources": [],
+  "hooks": {},
+  "model": null
+}
+```
+
+When editing is complete, save and exit with **Esc → `:wq` + Enter**. To exit without changes, enter **`:q!` + Enter**.
+
+> `/agent create` and `/agent generate` are the same command.
+
+## Step 3: Apply the Agent
+
+Exit any open session with `/q`, then start a session with the new agent from your terminal:
+
+```bash
+kiro-cli chat --agent cloud-ops
+```
+
+Success when the `[cloud-ops] >` prompt is displayed.
+
+## Step 4: Check Tools
+
+Inside the session:
+
+```text
+/tools
+```
+
+Check the list of tools configured in the agent and their trust status.
+
+## Step 5: Switch Agents
+
+Use `/agent swap` to switch to a different agent during the current conversation:
+
+```text
+/agent swap kiro_default
+```
+
+## Key JSON Configuration Fields
+
+| Field           | Description                                                          |
+| --------------- | -------------------------------------------------------------------- |
+| `name`          | Agent name (required)                                                |
+| `prompt`        | System prompt                                                        |
+| `tools`         | Available tool scope (`["*"]` = allow all)                           |
+| `allowedTools`  | Tools that run automatically without approval (trusted tools)        |
+| `mcpServers`    | MCP server configuration                                             |
+| `resources`     | Auto-loaded context files                                            |
+| `hooks`         | Auto-execute custom commands on lifecycle events                     |
+| `toolsSettings` | Per-tool detailed permissions (allowed/blocked paths, command rules) |
+| `model`         | Model override (`null` = default)                                    |
+
+### Difference between `tools` and `allowedTools`
+
+- **`tools`**: The scope of tools the agent can use. `["*"]` means all tools are available.
+- **`allowedTools`**: Tools that run automatically without user approval. Tools not listed here will request y/t/n approval before execution.
+
+In practice, open everything with `tools: ["*"]` and register only trusted tools in `allowedTools` to achieve both security and convenience.
+
+## Agent Management Commands
+
+| Command                       | Description                          |
+| ----------------------------- | ------------------------------------ |
+| `/agent list`                 | List agents                          |
+| `/agent create`               | Create a new agent (interactive)     |
+| `/agent edit`                 | Edit existing agent JSON (in editor) |
+| `/agent swap {name}`          | Switch to another agent              |
+| `/agent setdefault -n {name}` | Change default agent                 |
+
+When modifying agent settings, use `/agent edit` instead of opening the file directly with `vi` for convenience.
+
+## Global vs Local Agents
+
+| Type      | Path                         |
+| --------- | ---------------------------- |
+| Global    | `~/.kiro/agents/{name}.json` |
+| Workspace | `.kiro/agents/{name}.json`   |
+
+If the same name exists, the workspace agent takes priority.
+
+## Checkpoint
+
+You have completed this step if you have confirmed all of the following:
+
+1. `cloud-ops` agent confirmed in `/agent list`
+2. `[cloud-ops] >` prompt displayed
+3. Tool list confirmed with `/tools`
+4. Return to default agent confirmed with `/agent swap kiro_default`
+
+Next: [MCP Overview](./mcp-overview) — understand MCP architecture before adding AWS documentation tools.

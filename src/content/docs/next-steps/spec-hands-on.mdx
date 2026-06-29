@@ -1,0 +1,137 @@
+---
+title: "Spec Hands-on"
+---
+
+Walk through Kiro's spec-driven development workflow with a small example feature. This is a condensed version of the workshop exercise — for the full narrative, see [What to Do Next](./what-to-do-next#learn-spec-driven-development).
+
+## Prerequisites
+
+1. Open Kiro IDE connected to your WSL workspace
+2. Create or open a project folder:
+
+```bash
+mkdir -p ~/workspace/spec-practice && cd ~/workspace/spec-practice
+```
+
+3. Open the folder in Kiro via **Remote-WSL: Open Folder in WSL**
+
+## Spec File Structure
+
+Kiro specs live in `.kiro/specs/{feature-name}/`:
+
+```text
+.kiro/specs/as-intake-report/
+├── requirements.md   ← What to build
+├── design.md         ← How to build it
+└── tasks.md          ← Implementation checklist
+```
+
+**Progression:** Start Spec → Write Requirements → User confirmation → Write Design → User confirmation → Generate Tasks → Execute
+
+At each stage, review the document and say "Looks good, next step" or request changes.
+
+## Step 1: Create a Spec
+
+In the Kiro panel, click **+ New Spec** in the Specs section, or enter this prompt in chat:
+
+```text
+I want to build a web app that automatically generates reports when customers submit A/S (after-sales) requests.
+
+Input fields:
+- Product category selection (TV, Refrigerator, Washing Machine, Air Conditioner, Smartphone)
+- Fault type selection (Power failure, Noise, Cooling failure, Display failure, Physical damage)
+- Purchase date
+- Fault symptom description (free text)
+- Urgency level (High/Medium/Low)
+
+Output:
+- A/S intake report draft (official format)
+- Automatic warranty period determination (in/out of warranty)
+- Processing priority guidance based on urgency
+- Expected repair procedure checklist
+- Report copy button
+```
+
+Kiro writes `requirements.md` with user stories and acceptance criteria.
+
+**Checkpoint:** `requirements.md` exists in `.kiro/specs/` with user stories and acceptance criteria.
+
+## Step 2: Review Requirements
+
+Review the generated requirements. If satisfied:
+
+```text
+Requirements look good. Start the design.
+```
+
+If modifications are needed:
+
+```text
+Add a "Report PDF download" feature to User Story 2.
+```
+
+## Step 3: Generate Design
+
+Kiro writes `design.md` covering tech stack, component structure, and data flow. Example stack for this exercise:
+
+- Single HTML file (inline CSS + JavaScript)
+- No external libraries
+- Responsive layout
+
+Review and approve:
+
+```text
+Design looks good. Create the task list.
+```
+
+**Checkpoint:** `design.md` includes tech stack, component structure, and data flow.
+
+## Step 4: Generate Tasks
+
+```text
+Generate the tasks.
+```
+
+Kiro analyzes `requirements.md` and `design.md` to produce `tasks.md` — a checklist organized by dependency order (foundation → UI → logic → testing).
+
+Example task structure:
+
+```markdown
+# Task List: A/S Intake Report Generator
+
+- [ ] 1. HTML basic structure and style setup
+  - [ ] 1.1 Write HTML skeleton (head, body, container)
+  - [ ] 1.2 Define theme CSS variables
+  - [ ] 1.3 Set up responsive layout
+- [ ] 2. Input form UI implementation
+- [ ] 3. Report generation logic implementation
+- [ ] 4. Report output UI implementation
+```
+
+## Step 5: Execute Tasks
+
+Execute incrementally:
+
+```text
+Execute from the first task.
+```
+
+Or request the full implementation:
+
+```text
+Execute all tasks.
+```
+
+Kiro works through `tasks.md` checkboxes, marking items complete as it progresses.
+
+## Checkpoint
+
+You have completed this exercise if:
+
+1. All three spec files exist under `.kiro/specs/`
+2. Requirements include acceptance criteria
+3. Design describes components and data flow
+4. Tasks are broken into actionable checkboxes
+5. At least the first task was executed successfully
+
+For steering files that guide vibe coding without specs, see [Steering Files](../kiro-workspace-configuration/steering-files).

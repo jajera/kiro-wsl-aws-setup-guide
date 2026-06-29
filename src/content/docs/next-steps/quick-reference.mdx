@@ -55,17 +55,35 @@ title: "Quick Reference"
 | Check MCP configuration  | Open `.kiro/settings/mcp.json`                        |
 | Open integrated terminal | `` Ctrl+` `` or **Terminal → New Terminal**           |
 
+## Kiro CLI Commands
+
+Run from WSL bash unless noted. Start a session with `kiro-cli` or `kiro-cli chat --agent <name>`.
+
+| Command / slash cmd               | Purpose                             |
+| --------------------------------- | ----------------------------------- |
+| `kiro-cli chat --agent cloud-ops` | Start session with a specific agent |
+| `/agent list`                     | List available agents               |
+| `/agent create`                   | Create a new agent interactively    |
+| `/agent edit`                     | Edit current agent JSON in editor   |
+| `/agent swap <name>`              | Switch agent during session         |
+| `/tools`                          | List tools and trust status         |
+| `/mcp`                            | Show MCP server status              |
+| `/hooks`                          | Show configured hooks               |
+| `/q`                              | Exit current session                |
+
 ## Key File Locations
 
-| Path                      | Purpose                                |
-| ------------------------- | -------------------------------------- |
-| `~/.aws/config`           | AWS CLI profiles and SSO configuration |
-| `~/.ssh/config`           | SSH client configuration               |
-| `~/.ssh/id_ed25519.pub`   | SSH public key (for GitHub)            |
-| `~/.gitconfig`            | Global Git configuration               |
-| `~/workspace/`            | Recommended project workspace root     |
-| `.kiro/steering/`         | Project-level Kiro steering files      |
-| `.kiro/settings/mcp.json` | Project-level MCP server configuration |
+| Path                        | Purpose                                |
+| --------------------------- | -------------------------------------- |
+| `~/.aws/config`             | AWS CLI profiles and SSO configuration |
+| `~/.ssh/config`             | SSH client configuration               |
+| `~/.ssh/id_ed25519.pub`     | SSH public key (for GitHub)            |
+| `~/.gitconfig`              | Global Git configuration               |
+| `~/workspace/`              | Recommended project workspace root     |
+| `.kiro/steering/`           | Project-level Kiro steering files      |
+| `.kiro/settings/mcp.json`   | Project-level MCP server configuration |
+| `~/.kiro/agents/`           | Global Kiro CLI agent definitions      |
+| `~/.kiro/settings/mcp.json` | Global Kiro CLI MCP configuration      |
 
 ## Environment Variables
 
