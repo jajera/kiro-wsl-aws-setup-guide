@@ -1,6 +1,6 @@
 import { defineRouteMiddleware } from "@astrojs/starlight/route-data";
 
-const OG_IMAGE_PATH = "/kiro-wsl-aws-setup-guide/og-image.png";
+const OG_IMAGE_PATH = "/og-image.png";
 const OG_IMAGE_ALT =
   "Kiro WSL AWS Setup Guide - WSL2, Docker Desktop, Kiro IDE, and AWS SSO on Windows";
 

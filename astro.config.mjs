@@ -3,8 +3,8 @@ import starlight from "@astrojs/starlight";
 import starlightThemeVintage from "starlight-theme-vintage";
 
 export default defineConfig({
-  site: "https://jajera.github.io",
-  base: "/kiro-wsl-aws-setup-guide",
+  site: "https://kiro-wsl-aws-setup-guide.johna.kiwi",
+  base: "/",
   integrations: [
     starlight({
       title: "Kiro WSL AWS Setup Guide",
@@ -13,6 +13,9 @@ export default defineConfig({
       description:
         "Step-by-step guide for setting up a WSL2 + Docker Desktop + Kiro IDE + AWS SSO development environment on Windows.",
       plugins: [starlightThemeVintage()],
+      components: {
+        Head: "./src/components/Head.astro",
+      },
       customCss: ["./src/styles/splash-overrides.css"],
       social: [
         {

@@ -5,8 +5,6 @@ import * as path from "path";
 
 const CONTENT_DIR = path.resolve(__dirname, "../../src/content/docs");
 const PUBLIC_DIR = path.resolve(__dirname, "../../public");
-const BASE_PREFIX = "/kiro-wsl-aws-setup-guide/";
-
 interface ImageReference {
   altText: string;
   imagePath: string;
@@ -58,16 +56,14 @@ describe("Feature: kiro-wsl-aws-setup-guide, Property 2: Image reference resolut
      * Validates: Requirements 3.2, 8.2
      *
      * For any Markdown image reference found in any MDX file,
-     * removing the base path prefix `/kiro-wsl-aws-setup-guide/` from the path
+     * stripping a leading `/` from the path
      * SHALL yield a relative path that resolves to an existing file in `public/`.
      */
     expect(references.length).toBeGreaterThan(0);
 
     fc.assert(
       fc.property(fc.constantFrom(...references), (ref) => {
-        const relativePath = ref.imagePath.startsWith(BASE_PREFIX)
-          ? ref.imagePath.slice(BASE_PREFIX.length)
-          : ref.imagePath;
+        const relativePath = ref.imagePath.startsWith("/") ? ref.imagePath.slice(1) : ref.imagePath;
 
         const resolvedPath = path.join(PUBLIC_DIR, relativePath);
         expect(
