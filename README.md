@@ -16,7 +16,7 @@ Astro Starlight documentation site for the WSL2 + Docker Desktop + Kiro IDE + AW
 
 ## Deployed Site
 
-**https://jajera.github.io/kiro-wsl-aws-setup-guide/**
+**https://kiro-wsl-aws-setup-guide.johna.kiwi/**
 
 ## Local Development
 
